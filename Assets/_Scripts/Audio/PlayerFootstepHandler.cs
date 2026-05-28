@@ -6,7 +6,6 @@ public class PlayerFootstepHandler : MonoBehaviour
     [SerializeField] FootstepSurfacesSO surfaces;
 
     string currentSurfaceTag = "";
-    int footstepIndex = 0;
 
     public void SetSurface(string tag) => currentSurfaceTag = tag ?? "";
 

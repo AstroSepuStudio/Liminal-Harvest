@@ -1,12 +1,15 @@
 using UnityEngine;
 using UnityEngine.UI;
 
-public class Map_PlayerDot : MonoBehaviour
+namespace WS_ProceduralGeneration
 {
-    [SerializeField] Image iconImg;
-
-    public void SetPlayerIcon(Sprite avatar)
+    public class Map_PlayerDot : MonoBehaviour
     {
-        iconImg.sprite = avatar;
+        [SerializeField] Image iconImg;
+
+        public void SetPlayerIcon(Sprite avatar)
+        {
+            iconImg.sprite = avatar;
+        }
     }
 }

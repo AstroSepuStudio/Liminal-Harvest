@@ -101,7 +101,7 @@ Rigidbody:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 739888784821490057}
   serializedVersion: 5
-  m_Mass: 1
+  m_Mass: 5
   m_LinearDamping: 0
   m_AngularDamping: 0.05
   m_CenterOfMass: {x: 0, y: 0, z: 0}
@@ -457,16 +457,28 @@ MonoBehaviour:
     - Timing: 0
       SFX: {fileID: 11400000, guid: 1688873a1ed5e5742b9d56ee6e921bc6, type: 2}
       Loudness: 0
+    primTrigTimeOverride: -1
+    primFinTimeOverride: 2.2
+    secTrigTimeOverride: -1
+    secFinTimeOverride: -1
   - Trigger: FastSpin
     SFXs:
     - Timing: 0
       SFX: {fileID: 11400000, guid: f7eaf0a174e2f0f459fd921ccd38691d, type: 2}
       Loudness: 0
+    primTrigTimeOverride: -1
+    primFinTimeOverride: 1.6
+    secTrigTimeOverride: -1
+    secFinTimeOverride: -1
   - Trigger: SlowSpin
     SFXs:
     - Timing: 0
       SFX: {fileID: 11400000, guid: 39f9f113ace621d44b0b9450217fcdcb, type: 2}
       Loudness: 0
+    primTrigTimeOverride: -1
+    primFinTimeOverride: 3
+    secTrigTimeOverride: -1
+    secFinTimeOverride: -1
   forceAim: 0
   sequenced: 0
   direction: 0

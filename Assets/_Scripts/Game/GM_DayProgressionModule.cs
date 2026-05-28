@@ -1,5 +1,6 @@
 using Mirror;
 using UnityEngine;
+using WS_ProceduralGeneration;
 
 public class GM_DayProgressionModule : NetworkBehaviour
 {
@@ -11,10 +12,10 @@ public class GM_DayProgressionModule : NetworkBehaviour
         [Min(1)] public int mapSize;
         [Min(0.1f)] public float difficultyMultiplier;
         [Min(1)] public int entityCap;
-        public LL_Tier.Tier minEntityTier;
-        public LL_Tier.Tier maxEntityTier;
-        public LL_Tier.Tier minLootTier;
-        public LL_Tier.Tier maxLootTier;
+        public WSDG_Tier.Tier minEntityTier;
+        public WSDG_Tier.Tier maxEntityTier;
+        public WSDG_Tier.Tier minLootTier;
+        public WSDG_Tier.Tier maxLootTier;
     }
 
     [Header("Fallback Formulas")]
@@ -28,10 +29,10 @@ public class GM_DayProgressionModule : NetworkBehaviour
     [SyncVar] public int CurrentMapSize = 1;
     [SyncVar] public float CurrentDifficultyMultiplier = 1f;
     [SyncVar] public int CurrentEntityCap = 5;
-    [SyncVar] public LL_Tier.Tier CurrentMinEntityTier = LL_Tier.Tier.Common;
-    [SyncVar] public LL_Tier.Tier CurrentMaxEntityTier = LL_Tier.Tier.Common;
-    [SyncVar] public LL_Tier.Tier CurrentMinLootTier = LL_Tier.Tier.Common;
-    [SyncVar] public LL_Tier.Tier CurrentMaxLootTier = LL_Tier.Tier.Common;
+    [SyncVar] public WSDG_Tier.Tier CurrentMinEntityTier = WSDG_Tier.Tier.Common;
+    [SyncVar] public WSDG_Tier.Tier CurrentMaxEntityTier = WSDG_Tier.Tier.Common;
+    [SyncVar] public WSDG_Tier.Tier CurrentMinLootTier = WSDG_Tier.Tier.Common;
+    [SyncVar] public WSDG_Tier.Tier CurrentMaxLootTier = WSDG_Tier.Tier.Common;
 
     public int FormulaMapSize(int day) => Mathf.Clamp(day, 1, maxMapSize);
     public float FormulaDifficulty(int day) => Mathf.Max(1f, day - difficultyOffset);
@@ -74,10 +75,10 @@ public class GM_DayProgressionModule : NetworkBehaviour
                   $"LootTier=[{CurrentMinLootTier}-{CurrentMaxLootTier}]");
     }
 
-    public bool IsEntityTierAllowed(LL_Tier.Tier tier) =>
+    public bool IsEntityTierAllowed(WSDG_Tier.Tier tier) =>
         tier >= CurrentMinEntityTier && tier <= CurrentMaxEntityTier;
 
-    public bool IsLootTierAllowed(LL_Tier.Tier tier) =>
+    public bool IsLootTierAllowed(WSDG_Tier.Tier tier) =>
         tier >= CurrentMinLootTier && tier <= CurrentMaxLootTier;
 
     bool TryGetExactOverride(int day, out DayProgressionOverride result)

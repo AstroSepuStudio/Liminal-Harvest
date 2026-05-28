@@ -1,0 +1,222 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 11ae83abdf0d5fc43ae5fd4ab81ace06, type: 3}
+  m_Name: RndRoom_184840
+  m_EditorClassIdentifier: Assembly-CSharp::RoomDataSO
+  Prefab: {fileID: 0}
+  biome: 0
+  RoomTier: 0
+  ValidVortexHome: 1
+  roomColor: {r: 1, g: 1, b: 1, a: 1}
+  RoomFootprint:
+  - Footprint: {x: 0, y: 0, z: 0}
+    MapSprite: {fileID: 0}
+    layerDir: 0
+  - Footprint: {x: 1, y: 0, z: 0}
+    MapSprite: {fileID: 0}
+    layerDir: 0
+  - Footprint: {x: 0, y: 0, z: 1}
+    MapSprite: {fileID: 0}
+    layerDir: 0
+  - Footprint: {x: 0, y: 0, z: 2}
+    MapSprite: {fileID: 0}
+    layerDir: 0
+  - Footprint: {x: 0, y: 0, z: 3}
+    MapSprite: {fileID: 0}
+    layerDir: 0
+  - Footprint: {x: 1, y: 0, z: 3}
+    MapSprite: {fileID: 0}
+    layerDir: 0
+  - Footprint: {x: 1, y: 1, z: 0}
+    MapSprite: {fileID: 0}
+    layerDir: 0
+  - Footprint: {x: 1, y: 1, z: 1}
+    MapSprite: {fileID: 0}
+    layerDir: 0
+  - Footprint: {x: 0, y: 1, z: 1}
+    MapSprite: {fileID: 0}
+    layerDir: 0
+  - Footprint: {x: 1, y: 0, z: 4}
+    MapSprite: {fileID: 0}
+    layerDir: 0
+  - Footprint: {x: 0, y: 1, z: 0}
+    MapSprite: {fileID: 0}
+    layerDir: 0
+  - Footprint: {x: 0, y: 0, z: 4}
+    MapSprite: {fileID: 0}
+    layerDir: 0
+  - Footprint: {x: 1, y: 0, z: 1}
+    MapSprite: {fileID: 0}
+    layerDir: 0
+  - Footprint: {x: 2, y: 0, z: 3}
+    MapSprite: {fileID: 0}
+    layerDir: 0
+  - Footprint: {x: 2, y: 0, z: 4}
+    MapSprite: {fileID: 0}
+    layerDir: 0
+  - Footprint: {x: 2, y: 1, z: 0}
+    MapSprite: {fileID: 0}
+    layerDir: 0
+  - Footprint: {x: 2, y: 1, z: 4}
+    MapSprite: {fileID: 0}
+    layerDir: 0
+  - Footprint: {x: 3, y: 1, z: 0}
+    MapSprite: {fileID: 0}
+    layerDir: 0
+  - Footprint: {x: 3, y: 1, z: 1}
+    MapSprite: {fileID: 0}
+    layerDir: 0
+  - Footprint: {x: 1, y: 1, z: 4}
+    MapSprite: {fileID: 0}
+    layerDir: 0
+  - Footprint: {x: 1, y: 2, z: 1}
+    MapSprite: {fileID: 0}
+    layerDir: 0
+  - Footprint: {x: 3, y: 0, z: 0}
+    MapSprite: {fileID: 0}
+    layerDir: 0
+  - Footprint: {x: 2, y: 1, z: 1}
+    MapSprite: {fileID: 0}
+    layerDir: 0
+  - Footprint: {x: 0, y: 1, z: 3}
+    MapSprite: {fileID: 0}
+    layerDir: 0
+  Ports:
+  - localCell: {x: 3, y: 0, z: 0}
+    face: 0
+    type: 0
+    deadEndOverride: {fileID: 0}
+    deoCell: {x: 0, y: 0, z: 0}
+  - localCell: {x: 1, y: 0, z: 3}
+    face: 1
+    type: 0
+    deadEndOverride: {fileID: 0}
+    deoCell: {x: 0, y: 0, z: 0}
+  - localCell: {x: 2, y: 1, z: 4}
+    face: 1
+    type: 0
+    deadEndOverride: {fileID: 0}
+    deoCell: {x: 0, y: 0, z: 0}
+  - localCell: {x: 3, y: 1, z: 1}
+    face: 2
+    type: 0
+    deadEndOverride: {fileID: 0}
+    deoCell: {x: 0, y: 0, z: 0}
+  - localCell: {x: 0, y: 0, z: 0}
+    face: 1
+    type: 0
+    deadEndOverride: {fileID: 0}
+    deoCell: {x: 0, y: 0, z: 0}
+  - localCell: {x: 1, y: 0, z: 0}
+    face: 1
+    type: 0
+    deadEndOverride: {fileID: 0}
+    deoCell: {x: 0, y: 0, z: 0}
+  - localCell: {x: 2, y: 1, z: 4}
+    face: 0
+    type: 0
+    deadEndOverride: {fileID: 0}
+    deoCell: {x: 0, y: 0, z: 0}
+  - localCell: {x: 0, y: 1, z: 1}
+    face: 0
+    type: 0
+    deadEndOverride: {fileID: 0}
+    deoCell: {x: 0, y: 0, z: 0}
+  - localCell: {x: 2, y: 0, z: 4}
+    face: 2
+    type: 0
+    deadEndOverride: {fileID: 0}
+    deoCell: {x: 0, y: 0, z: 0}
+  - localCell: {x: 0, y: 1, z: 3}
+    face: 2
+    type: 0
+    deadEndOverride: {fileID: 0}
+    deoCell: {x: 0, y: 0, z: 0}
+  - localCell: {x: 0, y: 1, z: 1}
+    face: 3
+    type: 0
+    deadEndOverride: {fileID: 0}
+    deoCell: {x: 0, y: 0, z: 0}
+  - localCell: {x: 1, y: 2, z: 1}
+    face: 3
+    type: 0
+    deadEndOverride: {fileID: 0}
+    deoCell: {x: 0, y: 0, z: 0}
+  - localCell: {x: 1, y: 0, z: 1}
+    face: 0
+    type: 0
+    deadEndOverride: {fileID: 0}
+    deoCell: {x: 0, y: 0, z: 0}
+  - localCell: {x: 0, y: 0, z: 1}
+    face: 3
+    type: 0
+    deadEndOverride: {fileID: 0}
+    deoCell: {x: 0, y: 0, z: 0}
+  - localCell: {x: 3, y: 1, z: 1}
+    face: 0
+    type: 0
+    deadEndOverride: {fileID: 0}
+    deoCell: {x: 0, y: 0, z: 0}
+  - localCell: {x: 0, y: 1, z: 3}
+    face: 1
+    type: 0
+    deadEndOverride: {fileID: 0}
+    deoCell: {x: 0, y: 0, z: 0}
+  - localCell: {x: 2, y: 0, z: 3}
+    face: 1
+    type: 0
+    deadEndOverride: {fileID: 0}
+    deoCell: {x: 0, y: 0, z: 0}
+  - localCell: {x: 1, y: 0, z: 1}
+    face: 2
+    type: 0
+    deadEndOverride: {fileID: 0}
+    deoCell: {x: 0, y: 0, z: 0}
+  - localCell: {x: 0, y: 0, z: 2}
+    face: 3
+    type: 0
+    deadEndOverride: {fileID: 0}
+    deoCell: {x: 0, y: 0, z: 0}
+  - localCell: {x: 2, y: 1, z: 1}
+    face: 0
+    type: 0
+    deadEndOverride: {fileID: 0}
+    deoCell: {x: 0, y: 0, z: 0}
+  - localCell: {x: 3, y: 1, z: 0}
+    face: 1
+    type: 0
+    deadEndOverride: {fileID: 0}
+    deoCell: {x: 0, y: 0, z: 0}
+  - localCell: {x: 3, y: 0, z: 0}
+    face: 1
+    type: 0
+    deadEndOverride: {fileID: 0}
+    deoCell: {x: 0, y: 0, z: 0}
+  - localCell: {x: 1, y: 2, z: 1}
+    face: 0
+    type: 0
+    deadEndOverride: {fileID: 0}
+    deoCell: {x: 0, y: 0, z: 0}
+  - localCell: {x: 0, y: 1, z: 0}
+    face: 3
+    type: 0
+    deadEndOverride: {fileID: 0}
+    deoCell: {x: 0, y: 0, z: 0}
+  - localCell: {x: 0, y: 0, z: 4}
+    face: 3
+    type: 0
+    deadEndOverride: {fileID: 0}
+    deoCell: {x: 0, y: 0, z: 0}
+  FootprintCorners: []
+  ComputedBounds:
+    m_Center: {x: 7.5, y: 7.5, z: 10}
+    m_Extent: {x: 10, y: 7.5, z: 12.5}

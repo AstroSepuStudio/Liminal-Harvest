@@ -1,7 +1,10 @@
 using UnityEngine;
 
-public interface IMapFollowTarget
+namespace WS_ProceduralGeneration
 {
-    Transform FollowTransform { get; }
-    bool IsAvailable { get; }
+    public interface IMapFollowTarget
+    {
+        Transform FollowTransform { get; }
+        bool IsAvailable { get; }
+    }
 }

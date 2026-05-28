@@ -1,11 +1,12 @@
 using UnityEngine;
-using static LL_Tier;
-using static ThemeDataSO;
 
-[CreateAssetMenu(menuName = "LethalLive/Decoration")]
-public class DecorationDataSO : ScriptableObject
+namespace WS_ProceduralGeneration
 {
-    public Tier Tier;
-    public SpawnableSize Size;
-    public GameObject Prefab;
+    [CreateAssetMenu(menuName = "LethalLive/Decoration")]
+    public class DecorationDataSO : ScriptableObject
+    {
+        public WSDG_Tier.Tier Tier;
+        public ThemeDataSO.SpawnableSize Size;
+        public GameObject Prefab;
+    }
 }

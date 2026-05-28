@@ -27,10 +27,30 @@ public class ItemBase : InteractableObject
 
     public PlayerData PData { get; private set; }
     public PlayerData LastPlayer { get; private set; }
+    public PlayerData TryGetValidPlayer()
+    {
+        if (PData != null) return PData;
+        if (LastPlayer != null) return LastPlayer;
+        return null;
+    }
+
+    public GameObject TryGetValidPlayerGameObject()
+    {
+        PlayerData pData = TryGetValidPlayer();
+        if (pData != null) return pData.gameObject;
+        return null;
+    }
+
     public Rigidbody RigidBody => rb;
     public ItemAnimationModule AnimationModule => animationModule;
     public ItemAction PrimaryAction => primaryAction;
     public ItemAction SecondaryAction => secondaryAction;
+
+    [System.Serializable] protected struct AudioLoudnessPair
+    {
+        public AudioSFX sfx;
+        public SoundLoudness sfxLoudness;
+    }
 
     public override void OnStartServer()
     {

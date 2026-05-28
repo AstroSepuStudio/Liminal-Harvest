@@ -90,9 +90,18 @@ public class PlayerMovement : NetworkBehaviour
     public Vector3 GetVelocity() => new(
         velocity.x,
         velocity.y + Mathf.Max(0f, externalMomentum.y),
-        velocity.z
-    );
+        velocity.z);
 
+    public Vector3 GetVelocityClean()
+    {
+        if (IsGrounded_)
+            return new(
+                velocity.x,
+                velocity.y - groundedGravity + Mathf.Max(0f, externalMomentum.y),
+                velocity.z);
+
+        return GetVelocity();
+    }
     bool IsGrounded()
     {
         res = Physics.OverlapSphere(feet.position, groundRadius, pData.GroundMask);
@@ -306,7 +315,11 @@ public class PlayerMovement : NetworkBehaviour
         if (pData.Skin_Data.Ragdoll_Manager.IsKnocked ||
             pData.CameraPivot == null ||
             !pData.Character_Controller.enabled)
+        {
+            jumpTime = 0f;
+            _tryJump = false;
             return;
+        }
 
         if (!pData.InputHandler.IsDefaultController)
         {

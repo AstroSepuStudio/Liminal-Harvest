@@ -1,8 +1,9 @@
 using Mirror;
-using System.Collections;
 using UnityEngine;
 using UnityEngine.Events;
 using static GameManager;
+using WS_ProceduralGeneration;
+using Unity.Collections.LowLevel.Unsafe;
 
 public class GM_DungeonModule : NetworkBehaviour
 {
@@ -18,9 +19,6 @@ public class GM_DungeonModule : NetworkBehaviour
     public UnityEvent<int> OnThemeChangedEv = new();
 
     public Int_HomewardBeacon HomewardBeacon => homewardBeacon;
-
-    [SyncVar(hook = nameof(SetHomewardBeaconPosition))]
-    public Vector3 startRoomPos;
 
     [SyncVar(hook = nameof(OnThemeChanged))]
     public int selectedTheme = 0;
@@ -38,6 +36,7 @@ public class GM_DungeonModule : NetworkBehaviour
         base.OnStartServer();
 
         dungeonOpen = false;
+        DungeonGenerator.Instance.OnDungeonGenerated.AddListener(SetHomewardBeaconPosition);
     }
 
     [Server]
@@ -69,7 +68,11 @@ public class GM_DungeonModule : NetworkBehaviour
         ? Instance.Seed
         : Random.Range(int.MinValue, int.MaxValue);
 
-        RpcGenerateMap(mapSeed, selectedTheme, Instance.progressionMod.CurrentMapSize);
+        int mapSize = LobbySettings.Instance.OverrideMapSize ? 
+            LobbySettings.Instance.MapSize : 
+            Instance.progressionMod.CurrentMapSize;
+
+        RpcGenerateMap(mapSize, selectedTheme, mapSeed);
     }
 
     [Server]
@@ -135,18 +138,18 @@ public class GM_DungeonModule : NetworkBehaviour
     }
 
     [ClientRpc]
-    void RpcGenerateMap(int seed, int theme, int mapSize)
+    void RpcGenerateMap(int mapSize, int theme, int seed)
     {
-        mapGenerator.StartGeneration(seed, theme, mapSize);
+        mapGenerator.StartGeneration(mapSize, ThemeDatas[theme], seed);
     }
 
-    private void SetHomewardBeaconPosition(Vector3 oldValue, Vector3 newValue)
+    private void SetHomewardBeaconPosition()
     {
-        if (isServer)
-        {
-            homewardBeacon.transform.position = newValue;
-            teleporter.SetParent(homewardBeacon.transform);
-        }
+        float offset = DungeonGenerator.Instance.CellSize / 2;
+        Vector3 position = DungeonGenerator.Instance.StartRoomPos + new Vector3(offset, 0, offset);
+        homewardBeacon.transform.position = position;
+
+        teleporter.SetParent(homewardBeacon.transform);
     }
 
     [ClientRpc]

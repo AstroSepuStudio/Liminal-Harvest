@@ -2,7 +2,7 @@ using Mirror;
 using UnityEngine;
 using UnityEngine.Events;
 
-public class IA_HurtboxAttack : ItemAction
+public class IA_HurtboxAttack : ItemAction, IControlHurtbox
 {
     [Header("Hurtbox Attack Settings")]
     [SerializeField] protected ItemHurtbox hurtbox;
@@ -42,8 +42,7 @@ public class IA_HurtboxAttack : ItemAction
         if (type == ItemActionType.None) return;
 
         if (forceAim && isServer)
-            item.PData.Player_Movement.ServerForceAimAt(
-                item.PData.transform.position + item.PData.CameraPivot.forward * 10f);
+            item.PData.Player_Movement.ServerForceAimAt(item.PData.LookCameraTarget.position);
 
         if (type == ItemActionType.Primary)
             item.AnimationModule.PlayPrimary(this, item.PData, animationTrigger);
@@ -53,11 +52,7 @@ public class IA_HurtboxAttack : ItemAction
         RpcPlayOnSwing();
     }
 
-    public override void Cancel()
-    {
-        //if (forceAim && isServer)
-        //    item.PData.Player_Movement.ServerClearForcedAim();
-    }
+    public override void Cancel() { }
 
     public override void OnAnimationTrigger()
     {
@@ -72,6 +67,9 @@ public class IA_HurtboxAttack : ItemAction
         if (forceAim && isServer)
             item.PData.Player_Movement.ServerClearForcedAim();
     }
+
+    public ItemBase GetOwner() => item;
+    public AttackStat GetAttackStat() => attackStat;
 
     [Server]
     public void HurtBoxHit()
@@ -112,5 +110,5 @@ public class IA_HurtboxAttack : ItemAction
         if (sfx == null) return;
 
         AudioManager.Instance.PlayOneShot(audioSource, sfx, item.PData.gameObject, onHurtLoudness);
-    }
+    }    
 }

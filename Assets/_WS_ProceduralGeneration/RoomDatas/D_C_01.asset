@@ -312,5 +312,5 @@ MonoBehaviour:
     MapSprite: {fileID: 0}
     layerDir: 0
   ComputedBounds:
-    m_Center: {x: 0, y: 2.5, z: 10}
+    m_Center: {x: 2.5, y: 2.5, z: 12.5}
     m_Extent: {x: 12.5, y: 7.5, z: 12.5}

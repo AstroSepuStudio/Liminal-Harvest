@@ -68,5 +68,5 @@ MonoBehaviour:
     deoCell: {x: -1, y: 0, z: 0}
   FootprintCorners: []
   ComputedBounds:
-    m_Center: {x: 0, y: 2.5, z: 5}
+    m_Center: {x: 2.5, y: 2.5, z: 7.5}
     m_Extent: {x: 7.5, y: 2.5, z: 7.5}

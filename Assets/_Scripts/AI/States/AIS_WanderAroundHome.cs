@@ -1,5 +1,6 @@
 using UnityEngine;
 using UnityEngine.Events;
+using WS_ProceduralGeneration;
 
 public class AIS_WanderAroundHome : AIState
 {

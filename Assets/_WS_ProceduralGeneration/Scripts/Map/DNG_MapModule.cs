@@ -5,7 +5,10 @@ using System.Linq;
 using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.UI;
+using WS_ProceduralGeneration;
 
+namespace WS_ProceduralGeneration
+{
 public class DNG_MapModule : NetworkBehaviour
 {
     [System.Serializable]
@@ -589,8 +592,8 @@ public class DNG_MapModule : NetworkBehaviour
         int startLayer = gen.StartRoomPos.y / gen.CellSize;
         SetRenderLayer(startLayer);
 
-        gen.EntityNetIds.Callback += OnEntityNetIdsChanged;
-        foreach (var netId in gen.EntityNetIds)
+        EntitySpawnerManager.Instance.EntityNetIds.Callback += OnEntityNetIdsChanged;
+        foreach (var netId in EntitySpawnerManager.Instance.EntityNetIds)
             SpawnEntityIcon(netId);
     }
 
@@ -789,8 +792,8 @@ public class DNG_MapModule : NetworkBehaviour
         foreach (var icon in playerIcons.Values)
             if (icon) Destroy(icon.gameObject);
 
-        if (DungeonGenerator.Instance != null)
-            DungeonGenerator.Instance.EntityNetIds.Callback -= OnEntityNetIdsChanged;
+        if (EntitySpawnerManager.Instance != null)
+            EntitySpawnerManager.Instance.EntityNetIds.Callback -= OnEntityNetIdsChanged;
 
         chunks.Clear();
         layerChunks.Clear();
@@ -807,4 +810,5 @@ public class DNG_MapModule : NetworkBehaviour
     }
 
     #endregion
+}
 }

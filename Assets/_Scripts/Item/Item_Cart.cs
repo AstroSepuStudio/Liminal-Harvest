@@ -7,6 +7,7 @@ public class Item_Cart : ItemBase
 {
     [Header("Cart")]
     [SerializeField] CharacterController cartCC;
+    [SerializeField] Transform parent;
     [SerializeField] Transform wheelPosition;
     [SerializeField] Transform handlePosition;
     [SerializeField] Transform itemStoragePosition;
@@ -31,7 +32,6 @@ public class Item_Cart : ItemBase
 
     [Header("Raycast Collision")]
     [SerializeField] Transform[] raycastTs;
-    [SerializeField] float wallPushDistance = 0.6f;
     [SerializeField] float wallPushStrength = 8f;
     [SerializeField] float raycastLength = 0.55f;
     [SerializeField] LayerMask cartBlockingLayers;
@@ -89,7 +89,7 @@ public class Item_Cart : ItemBase
         }
 
         float speed = Mathf.Abs(forward) > movementThreshold ? lastForwardSign * moveSpeed : 0f;
-        Vector3 horizontalDelta = speed * Time.deltaTime * transform.forward;
+        Vector3 horizontalDelta = speed * Time.deltaTime * parent.forward;
         bool isMoving = Mathf.Abs(speed) > movementThreshold;
 
         TickOneRaycast();
@@ -123,11 +123,11 @@ public class Item_Cart : ItemBase
         rb.isKinematic = true;
 
         float xRot = Quaternion.LookRotation(wheelPosition.position - currentDriver.transform.position).eulerAngles.x;
-        transform.SetPositionAndRotation(
-            cartCC.transform.position, 
-            Quaternion.Euler(xRot, transform.eulerAngles.y, 0f));
+        parent.SetPositionAndRotation(
+            cartCC.transform.position,
+            Quaternion.Euler(xRot, parent.eulerAngles.y, 0f));
 
-        currentDriver.transform.rotation = Quaternion.Euler(0f, transform.eulerAngles.y, 0f);
+        currentDriver.transform.rotation = Quaternion.Euler(0f, parent.eulerAngles.y, 0f);
 
         Vector3 handleWorldPos = handlePosition.position;
 
@@ -172,18 +172,18 @@ public class Item_Cart : ItemBase
     void RotateAroundHandle(float yDegrees)
     {
         Vector3 pivot = handlePosition.position;
-        pivot.y = transform.position.y;
+        pivot.y = parent.position.y;
 
         Quaternion rot = Quaternion.Euler(0f, yDegrees, 0f);
 
-        Vector3 offset = transform.position - pivot;
+        Vector3 offset = parent.position - pivot;
         float xRot = Quaternion.LookRotation(wheelPosition.position - currentDriver.transform.position).eulerAngles.x;
-        transform.position = pivot + rot * offset;
-        transform.rotation = rot * transform.rotation;
-        transform.rotation = Quaternion.Euler(xRot, transform.eulerAngles.y, 0f);
+        parent.position = pivot + rot * offset;
+        parent.rotation = rot * parent.rotation;
+        parent.rotation = Quaternion.Euler(xRot, parent.eulerAngles.y, 0f);
 
         cartCC.enabled = false;
-        cartCC.transform.position = transform.position;
+        cartCC.transform.position = parent.position;
         cartCC.enabled = true;
     }
 
@@ -234,22 +234,22 @@ public class Item_Cart : ItemBase
         cartVerticalVelocity = 0f;
         playerVerticalVelocity = 0f;
 
-        Vector3 toPlayer = player.transform.position - transform.position;
+        Vector3 toPlayer = player.transform.position - parent.position;
         toPlayer.y = 0f;
         if (toPlayer.sqrMagnitude > 0.001f)
         {
             Quaternion targetRot = Quaternion.LookRotation(-toPlayer.normalized);
-            transform.rotation = Quaternion.Euler(
-                transform.eulerAngles.x,
+            parent.rotation = Quaternion.Euler(
+                parent.eulerAngles.x,
                 targetRot.eulerAngles.y,
-                transform.eulerAngles.z);
+                parent.eulerAngles.z);
 
             cartCC.enabled = false;
-            cartCC.transform.rotation = transform.rotation;
+            cartCC.transform.rotation = parent.rotation;
             cartCC.enabled = true;
         }
 
-        transform.rotation *= grabRotationOffset;
+        parent.rotation *= grabRotationOffset;
 
         rb.isKinematic = true;
         rb.linearVelocity = Vector3.zero;
@@ -341,7 +341,9 @@ public class Item_Cart : ItemBase
     public void OnDriverJump()
     {
         if (currentDriver == null) return;
+
         currentDriver.Player_Movement.CmdSendJumpInput();
+        ReleaseDriver();
     }
 
     public override void OnPickUp()
@@ -358,10 +360,10 @@ public class Item_Cart : ItemBase
         playerVerticalVelocity = 0f;
 
         cartCC.enabled = false;
-        transform.position = position;
+        parent.position = position;
         cartCC.enabled = true;
 
-        Vector3 offset = position - transform.position;
+        Vector3 offset = position - parent.position;
         foreach (var item in storedItems)
         {
             if (item == null) continue;
@@ -406,8 +408,9 @@ public class Item_Cart : ItemBase
         if (!isServer || !other.CompareTag("Item")) return;
         var item = other.GetComponent<ItemBase>();
         if (item == null || item.HasOwner) return;
-        item.transform.SetParent(handlePosition);
+        item.transform.SetParent(transform);
         storedItems.Add(item);
+        Debug.Log("[Cart] Trigger enter");
     }
 
     public void OnTriggerExitEvent(Collider other)
@@ -415,7 +418,7 @@ public class Item_Cart : ItemBase
         if (!isServer) return;
         if (other.TryGetComponent<ItemBase>(out var item))
         {
-            if (item.transform.parent == handlePosition)
+            if (item.transform.parent == transform)
                 item.transform.parent = null;
             storedItems.Remove(item);
         }

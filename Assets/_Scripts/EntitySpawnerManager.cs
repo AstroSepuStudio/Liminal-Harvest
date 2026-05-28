@@ -2,6 +2,7 @@ using Mirror;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using WS_ProceduralGeneration;
 
 public class EntitySpawnerManager : NetworkBehaviour
 {
@@ -18,6 +19,8 @@ public class EntitySpawnerManager : NetworkBehaviour
 
     int TotalQ => aliveEntities.Count + deadEntities.Count;
     int MaxEntities => GameManager.Instance.progressionMod.CurrentEntityCap;
+
+    public readonly SyncList<uint> EntityNetIds = new();
 
     Transform[] spawnerPositions;
     Coroutine enemySpawningCoroutine;
@@ -71,7 +74,7 @@ public class EntitySpawnerManager : NetworkBehaviour
         deadEntities.Clear();
 
         StopCoroutine(enemySpawningCoroutine);
-        if (isServer) DungeonGenerator.Instance.EntityNetIds.Clear();
+        if (isServer) EntityNetIds.Clear();
     }
 
     private void OnDungeonOpens()
@@ -169,7 +172,7 @@ public class EntitySpawnerManager : NetworkBehaviour
         aliveEntities.Add(stats);
 
         if (entityObj.TryGetComponent<NetworkIdentity>(out var ni))
-            DungeonGenerator.Instance.EntityNetIds.Add(ni.netId);
+            EntityNetIds.Add(ni.netId);
 
         return true;
     }
@@ -184,6 +187,6 @@ public class EntitySpawnerManager : NetworkBehaviour
         deadEntities.Add(source.TargetStats);
 
         if (source.TargetStats.TryGetComponent<NetworkIdentity>(out var ni))
-            DungeonGenerator.Instance.EntityNetIds.Remove(ni.netId);
+            EntityNetIds.Remove(ni.netId);
     }
 }

@@ -6,6 +6,7 @@ using TMPro;
 using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.UI;
+using WS_ProceduralGeneration;
 using static GameManager;
 
 public class LobbyManagerScreen : UIManagerNetwork

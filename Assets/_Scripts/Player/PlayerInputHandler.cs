@@ -11,7 +11,8 @@ public class PlayerInputHandler : NetworkBehaviour
     IPlayerController activeController;
     IPlayerController defaultController;
 
-    public bool IsDefaultController => activeController == defaultController;
+    [SyncVar]
+    public bool IsDefaultController = true;
 
     public Item_Cart GetActiveCart()
     {
@@ -31,6 +32,7 @@ public class PlayerInputHandler : NetworkBehaviour
 
     public void OnPlayerPressEscape(InputAction.CallbackContext context)
     {
+        if (!IsDefaultController) return;
         if (!context.started) return;
         if (!isLocalPlayer || GameManager.Instance.lobbyManagerScreen.playerOnLMS == pData.Index) return;
 
@@ -62,6 +64,8 @@ public class PlayerInputHandler : NetworkBehaviour
     [Command(requiresAuthority = false)]
     private void Cmd_SwitchTabletState(bool open)
     {
+        if (!IsDefaultController) return;
+
         pData.SetLockPlayer(open);
         pData.Skin_Data.CharacterAnimator.SetBool("Tablet", open);
 
@@ -78,25 +82,53 @@ public class PlayerInputHandler : NetworkBehaviour
     }
 
     [Command]
-    public void CmdOnMove(Vector2 input) => activeController?.OnMove(input);
+    public void CmdOnMove(Vector2 input)
+    {
+        if (pData.Player_Stats.dead || pData.Player_Stats.knocked) return;
+        activeController?.OnMove(input);
+    }
 
     [Command]
-    public void CmdOnJump() => activeController?.OnJump();
+    public void CmdOnJump()
+    {
+        if (pData.Player_Stats.dead || pData.Player_Stats.knocked) return;
+        activeController?.OnJump();
+    }
 
     [Command]
-    public void CmdOnJumpCanceled() => activeController?.OnJumpCanceled();
+    public void CmdOnJumpCanceled()
+    {
+        if (pData.Player_Stats.dead || pData.Player_Stats.knocked) return;
+        activeController?.OnJumpCanceled();
+    }
 
     [Command]
-    public void CmdOnSprintStart() => activeController?.OnSprintStart();
+    public void CmdOnSprintStart()
+    {
+        if (pData.Player_Stats.dead || pData.Player_Stats.knocked) return;
+        activeController?.OnSprintStart();
+    }
 
     [Command]
-    public void CmdOnSprintStop() => activeController?.OnSprintStop();
+    public void CmdOnSprintStop()
+    {
+        if (pData.Player_Stats.dead || pData.Player_Stats.knocked) return;
+        activeController?.OnSprintStop();
+    }
 
     [Command]
-    public void CmdOnStartCrouch() => activeController?.OnCrouchStart();
+    public void CmdOnStartCrouch()
+    {
+        if (pData.Player_Stats.dead || pData.Player_Stats.knocked) return;
+        activeController?.OnCrouchStart();
+    }
 
     [Command]
-    public void CmdOnStopCrouch() => activeController?.OnCrouchStop();
+    public void CmdOnStopCrouch()
+    {
+        if (pData.Player_Stats.dead || pData.Player_Stats.knocked) return;
+        activeController?.OnCrouchStop();
+    }
 
     public void OnMove(InputAction.CallbackContext context)
     {
@@ -133,6 +165,8 @@ public class PlayerInputHandler : NetworkBehaviour
         activeController?.OnLoseControl(pData);
         activeController = controller;
         activeController.OnGainControl(pData);
+
+        IsDefaultController = false;
     }
 
     public void ReleaseController(IPlayerController controller)
@@ -142,11 +176,13 @@ public class PlayerInputHandler : NetworkBehaviour
         activeController.OnLoseControl(pData);
         activeController = defaultController;
         activeController.OnGainControl(pData);
+
+        IsDefaultController = true;
     }
 
     public void ReleaseToDefault()
     {
-        if (activeController == defaultController) return;
+        if (IsDefaultController) return;
         if (!isServer && !isLocalPlayer) return;
 
         pData.Character_Controller.enabled = false;
@@ -159,5 +195,7 @@ public class PlayerInputHandler : NetworkBehaviour
         activeController?.OnLoseControl(pData);
         activeController = defaultController;
         activeController.OnGainControl(pData);
+
+        IsDefaultController = true;
     }
 }

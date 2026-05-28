@@ -6,20 +6,6 @@ public abstract class ItemAction : NetworkBehaviour
 {
     [SerializeField] protected AudioSource audioSource;
 
-    protected enum ActionTiming { Start, Cancel, Trigger, Finish, Extra1, Extra2, Extra3 }
-    [Serializable] protected struct ActionSFX 
-    { 
-        public ActionTiming Timing; 
-        public AudioSFX SFX; 
-        public SoundLoudness Loudness; 
-    }
-
-    [Serializable] protected struct AnimationTrigger 
-    { 
-        public string Trigger; 
-        public ActionSFX[] SFXs;
-    }
-
     protected ItemBase item;
 
     public ItemBase Item => item;
@@ -77,4 +63,27 @@ public abstract class ItemAction : NetworkBehaviour
             }
         }
     }
+}
+
+public enum ActionTiming { Start, Cancel, Trigger, Finish, Extra1, Extra2, Extra3 }
+
+[Serializable]
+public class AnimationTrigger
+{
+    [Serializable]
+    public struct ActionSFX
+    {
+        public ActionTiming Timing;
+        public AudioSFX SFX;
+        public SoundLoudness Loudness;
+    }
+
+    public string Trigger;
+    public ActionSFX[] SFXs;
+
+    [Header("Timing Overrides (-1 for default behaviour)")]
+    public float primTrigTimeOverride = -1;
+    public float primFinTimeOverride = -1;
+    public float secTrigTimeOverride = -1;
+    public float secFinTimeOverride = -1;
 }

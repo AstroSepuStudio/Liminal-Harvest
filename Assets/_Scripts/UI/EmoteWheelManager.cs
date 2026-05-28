@@ -197,6 +197,8 @@ public class EmoteWheelManager : NetworkBehaviour
     public void PlayEmote(int index)
     {
         if (!isLocalPlayer) return;
+        if (pData.PlayerInventory.IsItemInUse) return;
+
         _playedEmote = true;
         CmdPlayEmote(index);
     }
@@ -206,6 +208,7 @@ public class EmoteWheelManager : NetworkBehaviour
     {
         if (index < 0 || index >= currentEmotes.Length) return;
         if (currentEmotes[index] == null) return;
+        if (pData.PlayerInventory.IsItemInUse) return;
 
         Emote emote = currentEmotes[index];
 

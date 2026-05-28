@@ -2,6 +2,7 @@ using System.Collections;
 using UnityEngine;
 using Mirror;
 using System.Linq;
+using WS_ProceduralGeneration;
 
 #if UNITY_EDITOR
 using UnityEditor;

@@ -1,86 +1,87 @@
-using Mirror;
 using System.Collections.Generic;
-using System.Drawing;
 using UnityEngine;
 
-public class EntitySpawner : NetworkDungeonSpawner
+namespace WS_ProceduralGeneration
 {
-    [Header("Entity Spawner")]
-    [SerializeField] GameObject entitySpawnerPrefab;
-    [SerializeField] Transform entitySpawnerParent;
-    [SerializeField, Range(0f, 100f)] float baseChance = 1f;
-    [SerializeField, Min(1)] int minimumSpawners = 3;
-
-    readonly List<Transform> spawnedTransforms = new();
-    public IReadOnlyList<Transform> SpawnedTransforms => spawnedTransforms;
-
-    protected override void OnCollected()
+    public class EntitySpawner : NetworkDungeonSpawner
     {
-        spawnedTransforms.Clear();
-    }
+        [Header("Entity Spawner")]
+        [SerializeField] GameObject entitySpawnerPrefab;
+        [SerializeField] Transform entitySpawnerParent;
+        [SerializeField, Range(0f, 100f)] float baseChance = 1f;
+        [SerializeField, Min(1)] int minimumSpawners = 3;
 
-    public override void Spawn(DungeonGenerator generator)
-    {
-        if (!IsServer) return;
-        if (CollectedPoints.Count == 0) return;
+        readonly List<Transform> spawnedTransforms = new();
+        public IReadOnlyList<Transform> SpawnedTransforms => spawnedTransforms;
 
-        float accumulatedChance = baseChance;
-
-        foreach (var point in CollectedPoints)
+        protected override void OnCollected()
         {
-            float roll = (float)(generator.RNG.NextDouble() * 100f);
-            float effective = accumulatedChance * generator.GetDificultyMultiplier(point.transform.position);
+            spawnedTransforms.Clear();
+        }
 
-            if (roll > effective)
+        public override void Spawn(DungeonGenerator generator)
+        {
+            if (!IsServer) return;
+            if (CollectedPoints.Count == 0) return;
+
+            float accumulatedChance = baseChance;
+
+            foreach (var point in CollectedPoints)
             {
-                accumulatedChance += baseChance;
-                continue;
+                float roll = (float)(generator.RNG.NextDouble() * 100f);
+                float effective = accumulatedChance * generator.GetDificultyMultiplier(point.transform.position);
+
+                if (roll > effective)
+                {
+                    accumulatedChance += baseChance;
+                    continue;
+                }
+
+                accumulatedChance = baseChance;
+                PlaceSpawner(ResolvePosition(point, generator.RNG), ResolveRotation(point, generator.RNG));
             }
 
-            accumulatedChance = baseChance;
+            if (spawnedTransforms.Count < minimumSpawners)
+            {
+                int qty = Mathf.Min(minimumSpawners, CollectedPoints.Count);
+                for (int i = 0; i < qty; i++)
+                {
+                    var pt = CollectedPoints[i];
+                    bool alreadyPlaced = spawnedTransforms.Exists(t =>
+                        Vector3.SqrMagnitude(t.position - pt.transform.position) < 0.01f);
+
+                    if (!alreadyPlaced)
+                        PlaceSpawner(ResolvePosition(pt, generator.RNG), ResolveRotation(pt, generator.RNG));
+
+                    if (spawnedTransforms.Count >= minimumSpawners) break;
+                }
+            }
+
+            OnSpawnComplete(spawnedTransforms.Count);
+        }
+
+        protected override void SpawnOne(DungeonSpawnPoint point, DungeonGenerator generator)
+        {
             PlaceSpawner(ResolvePosition(point, generator.RNG), ResolveRotation(point, generator.RNG));
         }
 
-        if (spawnedTransforms.Count < minimumSpawners)
+        protected override void OnSpawnComplete(int count)
         {
-            int qty = Mathf.Min(minimumSpawners, CollectedPoints.Count);
-            for (int i = 0; i < qty; i++)
-            {
-                var pt = CollectedPoints[i];
-                bool alreadyPlaced = spawnedTransforms.Exists(t =>
-                    Vector3.SqrMagnitude(t.position - pt.transform.position) < 0.01f);
-
-                if (!alreadyPlaced)
-                    PlaceSpawner(ResolvePosition(pt, generator.RNG), ResolveRotation(pt, generator.RNG));
-
-                if (spawnedTransforms.Count >= minimumSpawners) break;
-            }
+            Debug.Log($"[EntitySpawner] Placed {count} entity spawner(s).");
+            EntitySpawnerManager.Instance.SetSpawnerPositions(spawnedTransforms);
         }
 
-        OnSpawnComplete(spawnedTransforms.Count);
-    }
+        protected override void OnClear()
+        {
+            DestroyChildren(entitySpawnerParent, true, IsServer);
 
-    protected override void SpawnOne(DungeonSpawnPoint point, DungeonGenerator generator)
-    {
-        PlaceSpawner(ResolvePosition(point, generator.RNG), ResolveRotation(point, generator.RNG));
-    }
+            spawnedTransforms.Clear();
+        }
 
-    protected override void OnSpawnComplete(int count)
-    {
-        Debug.Log($"[EntitySpawner] Placed {count} entity spawner(s).");
-        EntitySpawnerManager.Instance.SetSpawnerPositions(spawnedTransforms);
-    }
-
-    protected override void OnClear()
-    {
-        DestroyChildren(entitySpawnerParent, true, IsServer);
-
-        spawnedTransforms.Clear();
-    }
-
-    void PlaceSpawner(Vector3 position, Quaternion rotation)
-    {
-        GameObject go = NetworkSpawn(entitySpawnerPrefab, position, rotation, entitySpawnerParent);
-        if (go != null) spawnedTransforms.Add(go.transform);
+        void PlaceSpawner(Vector3 position, Quaternion rotation)
+        {
+            GameObject go = NetworkSpawn(entitySpawnerPrefab, position, rotation, entitySpawnerParent);
+            if (go != null) spawnedTransforms.Add(go.transform);
+        }
     }
 }

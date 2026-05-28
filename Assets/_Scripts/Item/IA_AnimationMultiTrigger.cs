@@ -1,4 +1,5 @@
 using UnityEngine;
+using WS_ProceduralGeneration;
 
 public class IA_AnimationMultiTrigger : ItemAction
 {
@@ -36,6 +37,13 @@ public class IA_AnimationMultiTrigger : ItemAction
 
         int index = sequenced ? GetSequencedIndex() : GetRandomIndex();
         currentTrigger = animationTriggers[index];
+
+        float overrideT = currentTrigger.primFinTimeOverride;
+        if (overrideT > 0)
+        {
+            item.AnimationModule.OverridePrimaryFinishTime(overrideT);
+            item.AnimationModule.OverrideSecondaryFinishTime(overrideT);
+        }
 
         if (type == ItemActionType.Primary)
             item.AnimationModule.PlayPrimary(this, item.PData, currentTrigger.Trigger);

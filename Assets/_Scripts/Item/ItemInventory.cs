@@ -174,6 +174,7 @@ public class ItemInventory : NetworkBehaviour
         if (next != slot)
             selectedSlotIndex = next;
 
+        Debug.Log("[Inventory] Remove current item");
         RpcDropItem(slot, id);
     }
 
@@ -299,6 +300,8 @@ public class ItemInventory : NetworkBehaviour
 
         if (drop)
             dropping.OnDrop(this);
+
+        Debug.Log("[Inventory] Local drop item");
     }
 
     void LocalDropAllItems(bool drop = true)
@@ -435,6 +438,8 @@ public class ItemInventory : NetworkBehaviour
         ItemAction action = isPrimary ? equippedItem.PrimaryAction : equippedItem.SecondaryAction;
         if (action == null) return;
         if (action.IsOnCooldown()) return;
+
+        pData.EmoteManager.ServerClearLoopEmote();
         action.EnterOnCooldown();
 
         FireAction(isPrimary);

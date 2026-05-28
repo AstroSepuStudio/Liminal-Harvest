@@ -5,6 +5,7 @@ using Steamworks;
 using System.Collections;
 using UnityEngine.Events;
 using LethalLive;
+using WS_ProceduralGeneration;
 
 public enum PlayerTeam { White, Red, Blue, Yellow, Green, Pink }
 
@@ -122,7 +123,7 @@ public class PlayerData : NetworkBehaviour, IMapFollowTarget
             PlayerCanvas.SetActive(false);
             PlayerAudio.enabled = false;
             PlayerCamera.enabled = false;
-            MapModule.DisableModule();
+            //MapModule.DisableModule();
         }
     }
 

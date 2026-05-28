@@ -1,4 +1,8 @@
-public class DecorationSpawnPoint : DungeonSpawnPoint
+
+namespace WS_ProceduralGeneration
 {
-    public ThemeDataSO.SpawnableSize maxSize;
+    public class DecorationSpawnPoint : DungeonSpawnPoint
+    {
+        public ThemeDataSO.SpawnableSize maxSize;
+    }
 }

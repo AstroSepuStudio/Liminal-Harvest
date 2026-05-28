@@ -1,5 +1,6 @@
 using Mirror;
 using UnityEngine;
+using WS_ProceduralGeneration;
 
 public class Int_HomewardBeacon : InteractableObject, IMapFollowTarget
 {

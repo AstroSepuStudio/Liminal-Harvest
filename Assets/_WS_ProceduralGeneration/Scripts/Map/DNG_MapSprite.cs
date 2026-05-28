@@ -1,6 +1,9 @@
 using UnityEngine;
 
-public class DNG_MapSprite
+namespace WS_ProceduralGeneration
 {
+    public class DNG_MapSprite
+    {
 
+    }
 }

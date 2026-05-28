@@ -1,66 +1,64 @@
 using System.Collections.Generic;
 using Mirror;
 using UnityEngine;
+using WS_ProceduralGeneration;
 
-/// <summary>
-/// Networked spawner for furniture. Drop this as a child of the DungeonGenerator
-/// GameObject, assign the "Furniture" <see cref="SpawnChannel"/> asset, and wire
-/// up the parent transform and theme reference.
-/// </summary>
-public class FurnitureSpawner : NetworkDungeonSpawner
+namespace WS_ProceduralGeneration
 {
-    [Header("Furniture Spawner")]
-    [SerializeField] Transform furnitureParent;
-
-    public List<FurnitureEntity> SpawnedFurniture { get; } = new();
-    public List<uint> FurnitureNetIds { get; } = new();
-
-    // Extra loot positions discovered on spawned furniture pieces
-    readonly List<DungeonSpawnPoint> discoveredLootPoints = new();
-    public IReadOnlyList<DungeonSpawnPoint> DiscoveredLootPoints => discoveredLootPoints;
-
-    protected override void OnCollected()
+    public class FurnitureSpawner : NetworkDungeonSpawner
     {
-        SpawnedFurniture.Clear();
-        FurnitureNetIds.Clear();
-        discoveredLootPoints.Clear();
-    }
+        [Header("Furniture Spawner")]
+        [SerializeField] Transform furnitureParent;
 
-    protected override void SpawnOne(DungeonSpawnPoint point, DungeonGenerator generator)
-    {
-        if (!IsServer) return;
+        public List<FurnitureEntity> SpawnedFurniture { get; } = new();
+        public List<uint> FurnitureNetIds { get; } = new();
 
-        FurnitureDataSO data = generator.Theme.GetWeigthedFurniture(point.transform.position, generator.RNG);
-        if (data == null) return;
+        readonly List<DungeonSpawnPoint> discoveredLootPoints = new();
+        public override IReadOnlyList<DungeonSpawnPoint> DiscoveredPoints => discoveredLootPoints;
 
-        Vector3 pos = ResolvePosition(point, generator.RNG);
-        Quaternion rot = ResolveRotation(point, generator.RNG);
-
-        GameObject go = NetworkSpawn(data.Prefab, pos, rot, furnitureParent);
-        if (go == null) return;
-
-        if (!go.TryGetComponent(out FurnitureEntity furnEnt)) return;
-        if (!go.TryGetComponent<NetworkIdentity>(out var ni)) return;
-
-        if (furnEnt.lootPositions != null)
+        protected override void OnCollected()
         {
-            foreach (var lp in furnEnt.lootPositions)
-                if (lp != null) discoveredLootPoints.Add(lp);
+            SpawnedFurniture.Clear();
+            FurnitureNetIds.Clear();
+            discoveredLootPoints.Clear();
         }
 
-        SpawnedFurniture.Add(furnEnt);
-        FurnitureNetIds.Add(ni.netId);
-    }
+        protected override void SpawnOne(DungeonSpawnPoint point, DungeonGenerator generator)
+        {
+            if (!IsServer) return;
 
-    protected override void OnSpawnComplete(int count) =>
-        Debug.Log($"[FurnitureSpawner] Spawned {count} furniture piece(s).");
+            FurnitureDataSO data = generator.Theme.GetWeigthedFurniture(point.transform.position, generator.RNG);
+            if (data == null) return;
 
-    protected override void OnClear()
-    {
-        DestroyChildren(furnitureParent, true, IsServer);
+            Vector3 pos = ResolvePosition(point, generator.RNG);
+            Quaternion rot = ResolveRotation(point, generator.RNG);
 
-        SpawnedFurniture.Clear();
-        FurnitureNetIds.Clear();
-        discoveredLootPoints.Clear();
+            GameObject go = NetworkSpawn(data.Prefab, pos, rot, furnitureParent);
+            if (go == null) return;
+
+            if (!go.TryGetComponent(out FurnitureEntity furnEnt)) return;
+            if (!go.TryGetComponent<NetworkIdentity>(out var ni)) return;
+
+            if (furnEnt.lootPositions != null)
+            {
+                foreach (var lp in furnEnt.lootPositions)
+                    if (lp != null) discoveredLootPoints.Add(lp);
+            }
+
+            SpawnedFurniture.Add(furnEnt);
+            FurnitureNetIds.Add(ni.netId);
+        }
+
+        protected override void OnSpawnComplete(int count) =>
+            Debug.Log($"[FurnitureSpawner] Spawned {count} furniture piece(s).");
+
+        protected override void OnClear()
+        {
+            DestroyChildren(furnitureParent, true, IsServer);
+
+            SpawnedFurniture.Clear();
+            FurnitureNetIds.Clear();
+            discoveredLootPoints.Clear();
+        }
     }
 }

@@ -2,6 +2,7 @@ using System.Collections.Generic;
 using System.Linq;
 using Mirror;
 using UnityEngine;
+using WS_ProceduralGeneration;
 
 public class VortexPack : NetworkBehaviour
 {
@@ -37,6 +38,15 @@ public class VortexPack : NetworkBehaviour
         Instance = this;
     }
 
+    private void Start()
+    {
+        if (isServer)
+        {
+            DungeonGenerator.Instance.OnDungeonGenerated.RemoveListener(AssignHomeRoom);
+            DungeonGenerator.Instance.OnDungeonGenerated.AddListener(AssignHomeRoom);
+        }
+    }
+
     void OnDestroy()
     {
         if (Instance != this) return;
@@ -54,8 +64,6 @@ public class VortexPack : NetworkBehaviour
                 activeGroups.RemoveAt(i);
         }
     }
-
-    public void OnDungeonGenerated() => AssignHomeRoom();
 
     [Server]
     void AssignHomeRoom()
@@ -157,7 +165,7 @@ public class VortexPack : NetworkBehaviour
             }
 
             homeItems.Remove(item);
-            PlayerData thief = item.PData;
+            PlayerData thief = item.TryGetValidPlayer();
 
             if (thief != null)
                 ReportItemStolen(item, thief, brain);

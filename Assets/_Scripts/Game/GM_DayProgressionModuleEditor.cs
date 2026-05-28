@@ -2,8 +2,8 @@
 using System.Linq;
 using UnityEditor;
 using UnityEngine;
+using WS_ProceduralGeneration;
 using static GM_DayProgressionModule;
-using static LL_Tier;
 
 [CustomEditor(typeof(GM_DayProgressionModule))]
 public class GM_DayProgressionModuleEditor : Editor
@@ -267,10 +267,10 @@ public class GM_DayProgressionModuleEditor : Editor
             cap = lastBefore.entityCap;
         }
 
-        Tier minEnt = hasExact ? exactOvr.minEntityTier : (foundLast ? lastBefore.minEntityTier : Tier.Common);
-        Tier maxEnt = hasExact ? exactOvr.maxEntityTier : (foundLast ? lastBefore.maxEntityTier : Tier.Common);
-        Tier minLoot = hasExact ? exactOvr.minLootTier : (foundLast ? lastBefore.minLootTier : Tier.Common);
-        Tier maxLoot = hasExact ? exactOvr.maxLootTier : (foundLast ? lastBefore.maxLootTier : Tier.Common);
+        WSDG_Tier.Tier minEnt = hasExact ? exactOvr.minEntityTier : (foundLast ? lastBefore.minEntityTier : WSDG_Tier.Tier.Common);
+        WSDG_Tier.Tier maxEnt = hasExact ? exactOvr.maxEntityTier : (foundLast ? lastBefore.maxEntityTier : WSDG_Tier.Tier.Common);
+        WSDG_Tier.Tier minLoot = hasExact ? exactOvr.minLootTier : (foundLast ? lastBefore.minLootTier : WSDG_Tier.Tier.Common);
+        WSDG_Tier.Tier maxLoot = hasExact ? exactOvr.maxLootTier : (foundLast ? lastBefore.maxLootTier : WSDG_Tier.Tier.Common);
 
         string source = hasExact
             ? "exact override"

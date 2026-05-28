@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using UnityEngine;
+using WS_ProceduralGeneration;
 
 public class AIModule_Home : AIModule
 {

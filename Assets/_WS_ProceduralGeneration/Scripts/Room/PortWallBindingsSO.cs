@@ -1,31 +1,34 @@
 using System;
 using UnityEngine;
 
-[CreateAssetMenu(menuName = "LethalLive/PortWallBindings")]
-public class PortWallBindingsSO : ScriptableObject
+namespace WS_ProceduralGeneration
 {
-    [Serializable]
-    public struct PortWallBinding
+    [CreateAssetMenu(menuName = "LethalLive/PortWallBindings")]
+    public class PortWallBindingsSO : ScriptableObject
     {
-        public Direction direction;
-        public RoomDataSO.PortType portType;
-        public GameObject wallPrefab;
-        public GameObject doorPrefab;
-    }
-
-    public PortWallBinding[] Bindings;
-
-    public bool TryGetBinding(Direction direction, RoomDataSO.PortType portType, out PortWallBinding result)
-    {
-        foreach (var b in Bindings)
+        [Serializable]
+        public struct PortWallBinding
         {
-            if (b.direction == direction && b.portType == portType)
-            {
-                result = b;
-                return true;
-            }
+            public Direction direction;
+            public RoomDataSO.PortType portType;
+            public GameObject wallPrefab;
+            public GameObject doorPrefab;
         }
-        result = default;
-        return false;
+
+        public PortWallBinding[] Bindings;
+
+        public bool TryGetBinding(Direction direction, RoomDataSO.PortType portType, out PortWallBinding result)
+        {
+            foreach (var b in Bindings)
+            {
+                if (b.direction == direction && b.portType == portType)
+                {
+                    result = b;
+                    return true;
+                }
+            }
+            result = default;
+            return false;
+        }
     }
 }

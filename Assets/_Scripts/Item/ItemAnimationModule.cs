@@ -15,6 +15,25 @@ public class ItemAnimationModule : MonoBehaviour
     public float SecondaryTriggerTime => secondaryTriggerTime;
     public float SecondaryFinishTime => secondaryFinishTime;
 
+    public void OverridePrimaryTriggerTime(float time) => primaryTrigger = new(time);
+    public void OverridePrimaryFinishTime(float time) => primaryFinish = new(time);
+    public void OverrideSecondaryTriggerTime(float time) => secondaryTrigger = new(time);
+    public void OverrideSecondaryFinishTime(float time) => secondaryFinish = new(time);
+
+    public void ClearOverridePrimaryTriggerTime() => primaryTrigger = new(primaryTriggerTime);
+    public void ClearOverridePrimaryFinishTime() => primaryFinish = new(primaryFinishTime);
+    public void ClearOverrideSecondaryTriggerTime() => secondaryTrigger = new(secondaryTriggerTime);
+    public void ClearOverrideSecondaryFinishTime() => secondaryFinish = new(secondaryFinishTime);
+    public void ClearAllOverrides() => SetUpDefaultTimings();
+
+    private void SetUpDefaultTimings()
+    {
+        primaryTrigger = new(primaryTriggerTime);
+        primaryFinish = new(primaryFinishTime);
+        secondaryTrigger = new(secondaryTriggerTime);
+        secondaryFinish = new(secondaryFinishTime);
+    }
+
     ItemBase item;
     Coroutine activeSequence;
 
@@ -27,10 +46,7 @@ public class ItemAnimationModule : MonoBehaviour
     {
         this.item = item;
 
-        primaryTrigger = new(primaryTriggerTime);
-        primaryFinish = new(primaryFinishTime);
-        secondaryTrigger = new(secondaryTriggerTime);
-        secondaryFinish = new(secondaryFinishTime);
+        SetUpDefaultTimings();
     }
 
     public void PlayPrimary(ItemAction action, PlayerData pData, string animTrigger, bool isBool = false)

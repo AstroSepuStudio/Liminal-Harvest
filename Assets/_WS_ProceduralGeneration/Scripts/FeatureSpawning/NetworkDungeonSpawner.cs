@@ -1,24 +1,41 @@
 using Mirror;
 using UnityEngine;
 
-public abstract class NetworkDungeonSpawner : DungeonSpawner
+namespace WS_ProceduralGeneration
 {
-    // Subclasses can check this directly if needed
-    protected bool IsServer => NetworkServer.active;
-
-    public override void Clear()
+    public abstract class NetworkDungeonSpawner : DungeonSpawner
     {
-        if (!IsServer) return;
-        base.Clear();
-    }
+        protected bool IsServer => NetworkServer.active;
 
-    /// <summary> Returns the spawned GameObject, or null if not on server. </summary>
-    protected GameObject NetworkSpawn(GameObject prefab, Vector3 position, Quaternion rotation, Transform parent = null)
-    {
-        if (!IsServer) return null;
+        public override void Clear()
+        {
+            if (!IsServer) return;
+            base.Clear();
+        }
 
-        GameObject go = Instantiate(prefab, position, rotation, parent);
-        NetworkServer.Spawn(go);
-        return go;
+        protected GameObject NetworkSpawn(GameObject prefab, Vector3 position, Quaternion rotation, Transform parent = null)
+        {
+            if (!NetworkServer.active)
+                return Spawn(prefab, position, rotation, parent);
+
+            if (!IsServer) return null;
+
+            GameObject go = Instantiate(prefab, position, rotation, parent);
+            NetworkServer.Spawn(go);
+            return go;
+        }
+
+        protected void DestroyChildren(Transform parent, bool hasNetID, bool isServer)
+        {
+            if (parent == null) return;
+            if (hasNetID && !isServer) return;
+
+            for (int i = parent.childCount - 1; i >= 0; i--)
+            {
+                var child = parent.GetChild(i).gameObject;
+                if (hasNetID) NetworkServer.Destroy(child);
+                else Destroy(child);
+            }
+        }
     }
 }

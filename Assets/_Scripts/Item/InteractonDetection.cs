@@ -7,11 +7,20 @@ public class InteractonDetection : NetworkBehaviour
 {
     [SerializeField] PlayerData pData;
 
+    [Header("Interactable Detection")]
     [SerializeField] float detectRadius = 2f;
     [SerializeField] float raycastDistance = 3f;
     [SerializeField] float aimAngleThreshold = 10f;
     [SerializeField] LayerMask itemLayer;
     [SerializeField] LayerMask interactLayer;
+
+    [Header("Collision Detection")]
+    [SerializeField] float velocityHitThreshold = 4f;
+    [SerializeField] float maxMomentumThreshold = 150f;
+    [SerializeField] float minDamage = 1f;
+    [SerializeField] float maxDamage = 10f;
+    [SerializeField] float minKnock = 5f;
+    [SerializeField] float maxKnock = 100f;
 
     InteractableObject currentInteractable;
 
@@ -229,6 +238,45 @@ public class InteractonDetection : NetworkBehaviour
             lockedTags.Remove(tag);
         else if (lockTag && !lockedTags.Contains(tag))
             lockedTags.Add(tag);
+    }
+
+    void OnControllerColliderHit(ControllerColliderHit hit)
+    {
+        if (!isServer) return;
+
+        Rigidbody body = hit.collider.attachedRigidbody;
+        if (body == null || body.isKinematic) return;
+
+        Vector3 impactVelocity = body.linearVelocity;
+        float speed = impactVelocity.magnitude;
+
+        if (speed < velocityHitThreshold)
+        {
+            Vector3 pushDir = hit.point - transform.position;
+            body.AddForce(pushDir.normalized, ForceMode.Impulse);
+            return;
+        }
+
+        float impactMomentum = body.mass * speed;
+        float intensity = Mathf.Clamp01(impactMomentum / maxMomentumThreshold);
+        intensity = Mathf.Pow(intensity, 2);
+
+        float damageValue = Mathf.Lerp(minDamage, maxDamage, intensity);
+        float knockValue = Mathf.Lerp(minKnock, maxKnock, intensity);
+
+        body.AddForce(-impactVelocity * 0.5f, ForceMode.Impulse);
+
+        AttackStat colStat = new(0, knockValue, knockValue, damageValue, 0);
+
+        AttackEvent attack = new()
+        {
+            AttackStat_ = colStat,
+            Position = body.transform.position,
+            SourceStats = null,
+            TeamID = -1
+        };
+
+        pData.Player_Stats.ReceiveAttack(attack);
     }
 
     private void OnDrawGizmosSelected()

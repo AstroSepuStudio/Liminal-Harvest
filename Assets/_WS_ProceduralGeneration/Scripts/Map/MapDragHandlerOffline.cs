@@ -1,19 +1,22 @@
 using UnityEngine;
-using UnityEngine.EventSystems;
 
-public class MapDragHandlerOffline : MonoBehaviour, IDragHandler, IPointerDownHandler
+namespace WS_ProceduralGeneration
 {
-    [SerializeField] RectTransform mapTarget;
-    [SerializeField] DNG_MapModuleOffline mapModule;
-
-    public void OnPointerDown(PointerEventData eventData)
+    public class MapDragHandlerOffline : MonoBehaviour
+    //, IDragHandler, IPointerDownHandler
     {
-        if (mapModule.IsFollowingPlayer)
-            mapModule.ToggleFollowPlayer();
-    }
+        //[SerializeField] RectTransform mapTarget;
+        //[SerializeField] DNG_MapModuleOffline mapModule;
 
-    public void OnDrag(PointerEventData eventData)
-    {
-        mapTarget.anchoredPosition += eventData.delta;
+        //public void OnPointerDown(PointerEventData eventData)
+        //{
+        //    if (mapModule.IsFollowingPlayer)
+        //        mapModule.ToggleFollowPlayer();
+        //}
+
+        //public void OnDrag(PointerEventData eventData)
+        //{
+        //    mapTarget.anchoredPosition += eventData.delta;
+        //}
     }
 }

@@ -1,5 +1,5 @@
 using UnityEngine;
-using static LL_Tier;
+using WS_ProceduralGeneration;
 
 [CreateAssetMenu(menuName = "LethalLive/Item")]
 public class ItemSO : ScriptableObject, IHaveTier
@@ -7,12 +7,12 @@ public class ItemSO : ScriptableObject, IHaveTier
     public enum ItemAnimationType { Default, OneHanded, TwoHanded, Crowbar, Sword }
 
     public GameObject itemPrefab;
-    public Tier Tier;
+    public WSDG_Tier.Tier Tier;
     public ItemAnimationType animationType;
     public AudioSFX[] DropSFX;
     public AudioSFX[] EquipSFX;
 
-    public Tier GetTier() => Tier;
+    public WSDG_Tier.Tier GetTier() => Tier;
 
     public string itemName;
     public Sprite icon;

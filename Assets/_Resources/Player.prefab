@@ -20666,6 +20666,12 @@ MonoBehaviour:
   interactLayer:
     serializedVersion: 2
     m_Bits: 512
+  velocityHitThreshold: 7
+  maxMomentumThreshold: 150
+  minDamage: 1
+  maxDamage: 10
+  minKnock: 5
+  maxKnock: 100
 --- !u!114 &8358554247557569182
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -20700,6 +20706,7 @@ MonoBehaviour:
   syncMode: 0
   syncInterval: 0
   pData: {fileID: 1929105138981420781}
+  IsDefaultController: 1
 --- !u!1 &2629917886761372264
 GameObject:
   m_ObjectHideFlags: 0

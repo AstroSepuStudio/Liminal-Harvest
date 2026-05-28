@@ -24,7 +24,7 @@ MonoBehaviour:
   isTwoHanded: 0
   isSellable: 1
   minValue: 5
-  maxValue: 20
+  maxValue: 15
   hasPrimaryAction: 0
   hasSecondaryAction: 0
   pickable: 1

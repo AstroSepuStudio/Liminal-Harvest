@@ -1,32 +1,35 @@
 using System;
 using UnityEngine;
-using static LL_Tier;
 
-[CreateAssetMenu(menuName = "LethalLive/Furniture")]
-public class FurnitureDataSO : ScriptableObject, IHaveTier
+namespace WS_ProceduralGeneration
 {
-    public GameObject Prefab;
-
-    public Tier Tier;
-    public Tier GetTier() => Tier;
-
-    public ItemDropThreshold[] dropThresholds;
-    public ItemDrop[] lootTable;
-
-    [Serializable]
-    public struct ItemDrop
+    [CreateAssetMenu(menuName = "LethalLive/Furniture")]
+    public class FurnitureDataSO : ScriptableObject, IHaveTier
     {
-        public ItemSO Item;
-        public float dropChance;
-        public int minQuantity;
-        public int maxQuantity;
-    }
+        public GameObject Prefab;
 
-    [Serializable]
-    public struct ItemDropThreshold
-    {
-        public ItemDrop Item_Drop;
-        public float dropThreshold; // Ex: 50% (currentHP)
-        public bool triggered;
+        public WSDG_Tier.Tier Tier;
+        public WSDG_Tier.Tier GetTier() => Tier;
+
+        public ItemDropThreshold[] dropThresholds;
+        public ItemDrop[] lootTable;
+
+        [Serializable]
+        public struct ItemDrop
+        {
+            public ItemSO Item;
+            public float dropChance;
+            public int minQuantity;
+            public int maxQuantity;
+        }
+
+        [Serializable]
+        public struct ItemDropThreshold
+        {
+            public ItemDrop Item_Drop;
+            public float dropThreshold; // Ex: 50% (currentHP)
+            public bool triggered;
+        }
     }
 }
+

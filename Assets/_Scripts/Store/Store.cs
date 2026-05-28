@@ -5,6 +5,7 @@ using TMPro;
 using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.UI;
+using WS_ProceduralGeneration;
 
 public class Store : NetworkBehaviour
 {
@@ -189,7 +190,7 @@ public class Store : NetworkBehaviour
 
             if (itemOnSale)
             {
-                LL_Tier.Tier discountTier = LL_Tier.RollRandomTier();
+                WSDG_Tier.Tier discountTier = WSDG_Tier.RollRandomTier();
                 int discount = RollDiscount(discountTier);
                 int salePrice = Mathf.Max(1, Mathf.RoundToInt(basePrice * (1f - discount / 100f)));
 
@@ -214,13 +215,13 @@ public class Store : NetworkBehaviour
         }
     }
 
-    static int RollDiscount(LL_Tier.Tier tier) => tier switch
+    static int RollDiscount(WSDG_Tier.Tier tier) => tier switch
     {
-        LL_Tier.Tier.Common => Random.Range(5, 11),
-        LL_Tier.Tier.Uncommon => Random.Range(15, 21),
-        LL_Tier.Tier.Rare => Random.Range(25, 36),
-        LL_Tier.Tier.Epic => Random.Range(40, 66),
-        LL_Tier.Tier.Legendary => Random.Range(70, 91),
+        WSDG_Tier.Tier.Common => Random.Range(5, 11),
+        WSDG_Tier.Tier.Uncommon => Random.Range(15, 21),
+        WSDG_Tier.Tier.Rare => Random.Range(25, 36),
+        WSDG_Tier.Tier.Epic => Random.Range(40, 66),
+        WSDG_Tier.Tier.Legendary => Random.Range(70, 91),
         _ => Random.Range(5, 11)
     };
 

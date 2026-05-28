@@ -63,15 +63,24 @@ MonoBehaviour:
   - {fileID: 11400000, guid: 84d86eaab8cc34147b74786e914dbeb4, type: 2}
   - {fileID: 11400000, guid: 4d6a56ad137fbe843973578efe060f83, type: 2}
   deadEndRooms: []
+  gridGrowth:
+    x: 3
+    y: 4
+    z: 2
+  startRoomAlignment:
+    x: 0
+    y: 0
+    z: 0
   floorMaterial: {fileID: 2100000, guid: aa57f306f6da7bd4e9892c9401ee6d60, type: 2}
   ceilingMaterial: {fileID: 2100000, guid: 6a12ac9bdcb199a4a82fb4888f484d32, type: 2}
   wallMaterial: {fileID: 2100000, guid: aea1bd7129cd4044bb8fd7c385a4e739, type: 2}
   spawnableItems:
   - {fileID: 11400000, guid: d6015b7736f8f8c49b4af775dd7ff787, type: 2}
   - {fileID: 11400000, guid: e876387970135904991dc64764e7c5e6, type: 2}
-  - {fileID: 11400000, guid: 3c30ba55c7604f4498556a7791c247f0, type: 2}
+  - {fileID: 11400000, guid: d6e97891ed5dd834e9e2e6354ba8050f, type: 2}
   - {fileID: 11400000, guid: fa0ac3fbbce4a7d47b1441de5152c8b5, type: 2}
   - {fileID: 11400000, guid: 9e1f470697f150e49a583de621d610bd, type: 2}
+  - {fileID: 11400000, guid: 8161e72aeb2d2c44c9238e6f2e7c1d8c, type: 2}
   spawnableFurniture:
   - {fileID: 11400000, guid: 5ec73b96afe77a740b868e17e16ac691, type: 2}
   - {fileID: 11400000, guid: 705c82ef6b0010a4698ae119b907454e, type: 2}

@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Events;
+using WS_ProceduralGeneration;
 
 public class AIS_WanderBetweenRooms : AIState
 {
