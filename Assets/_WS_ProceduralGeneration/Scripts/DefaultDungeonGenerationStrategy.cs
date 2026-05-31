@@ -5,6 +5,8 @@ namespace WS_ProceduralGeneration
 {
     public class DefaultDungeonGenerationStrategy : IDungeonGenerationStrategy
     {
+        readonly Dictionary<RoomDataSO, int> _spawnCounts = new();
+
         struct OpenPort
         {
             public int roomId;
@@ -20,6 +22,8 @@ namespace WS_ProceduralGeneration
             List<DungeonGenerator.PlacedRoom> placed,
             DungeonGenerator.Cell[,,] grid)
         {
+            _spawnCounts.Clear();
+
             if (ctx.Theme?.startingRoom == null)
             {
                 Debug.LogError("[DunGen] Theme or startingRoom is missing.");
@@ -76,6 +80,7 @@ namespace WS_ProceduralGeneration
 
                         var anchor = open.worldCell + DirectionUtils.DirectionVector(open.face) - port.localCell;
                         if (!ctx.FootprintFits(cand, grid, anchor)) continue;
+                        if (!SatisfiesConstraints(cand, anchor, open.depth + 1, ctx.GridSize)) continue;
 
                         var pr = Place(cand, anchor, open.depth + 1, ctx, placed, grid, ref nextRoomId);
                         if (pr == null) continue;
@@ -100,7 +105,7 @@ namespace WS_ProceduralGeneration
             return center;
         }
 
-        static DungeonGenerator.PlacedRoom Place(
+        private DungeonGenerator.PlacedRoom Place(
             RoomDataSO data, Vector3Int anchor, int depth,
             DungeonGenerationContext ctx,
             List<DungeonGenerator.PlacedRoom> placed,
@@ -119,6 +124,11 @@ namespace WS_ProceduralGeneration
             };
 
             placed.Add(pr);
+            if (data.constraints.maxSpawns >= 0)
+            {
+                _spawnCounts.TryGetValue(data, out int count);
+                _spawnCounts[data] = count + 1;
+            }
 
             foreach (var local in data.RoomFootprint)
             {
@@ -193,6 +203,25 @@ namespace WS_ProceduralGeneration
 
             Shuffle(ctx.RNG, weighted);
             return weighted.ToArray();
+        }
+
+        bool SatisfiesConstraints(RoomDataSO room, Vector3Int anchor, int depth, Vector3Int gridSize)
+        {
+            var c = room.constraints;
+
+            if (c.minDepth > 0 && depth < c.minDepth) return false;
+
+            if (c.maxSpawns >= 0)
+            {
+                _spawnCounts.TryGetValue(room, out int count);
+                if (count >= c.maxSpawns) return false;
+            }
+
+            if (!RoomDataSO.SatisfiesAxisConstraint(c.x, anchor.x, gridSize.x)) return false;
+            if (!RoomDataSO.SatisfiesAxisConstraint(c.y, anchor.y, gridSize.y)) return false;
+            if (!RoomDataSO.SatisfiesAxisConstraint(c.z, anchor.z, gridSize.z)) return false;
+
+            return true;
         }
 
         static WSDG_Tier.Tier RollTier(DungeonGenerationContext ctx, Dictionary<WSDG_Tier.Tier, float> weights)

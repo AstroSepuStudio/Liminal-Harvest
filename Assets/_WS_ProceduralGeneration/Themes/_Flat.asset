@@ -10,7 +10,7 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 1976320c8433c7b4ba26890fb2382bee, type: 3}
-  m_Name: _Level 0
+  m_Name: _Flat
   m_EditorClassIdentifier: 
   levelName: Level 0
   startingRoom: {fileID: 11400000, guid: d3dc14e7f8c7d8e4c985085d4830fecb, type: 2}
@@ -66,7 +66,7 @@ MonoBehaviour:
   deadEndRooms: []
   gridGrowth:
     x: 3
-    y: 4
+    y: 0
     z: 2
   startRoomAlignment:
     x: 0

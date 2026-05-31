@@ -46,6 +46,7 @@ public class LobbyManagerScreen : UIManagerNetwork
     [SerializeField] Toggle teamDamage_Toggle;
     [SerializeField] Toggle teamKnock_Toggle;
     [SerializeField] Toggle setSeed_Toggle;
+    [SerializeField] Toggle overrideMapS_Toggle;
 
     [SyncVar] public int playerOnLMS = -1;
     [SyncVar] bool open = false;
@@ -68,6 +69,7 @@ public class LobbyManagerScreen : UIManagerNetwork
 
         mapSize_IP.SetTextWithoutNotify(LobbySettings.Instance.MapSize.ToString());
         setSeed_Toggle.SetIsOnWithoutNotify(LobbySettings.Instance.UseSetSeed);
+        overrideMapS_Toggle.SetIsOnWithoutNotify(LobbySettings.Instance.OverrideMapSize);
 
         Instance.dngMod.OnThemeChangedEv.AddListener(RefreshLevelName);
         Instance.dayMod.OnDayStarted.AddListener(RefreshDay);

@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Animations;
 
 namespace WS_ProceduralGeneration
 {
@@ -8,6 +9,21 @@ namespace WS_ProceduralGeneration
     public class RoomDataSO : ScriptableObject
     {
         public enum PortType { Doorway, Continuous3x3, Continuous3x3Edge }
+        public enum AxisConstraint { Any, Center, Positive, Negative, Edges }
+
+        [System.Serializable]
+        public struct RoomConstraints
+        {
+            public AxisConstraint x;
+            public AxisConstraint y;
+            public AxisConstraint z;
+
+            [Min(-1), Tooltip("-1 = unlimited")]
+            public int maxSpawns;
+
+            [Min(0)]
+            public int minDepth;
+        }
 
         [Serializable]
         public struct RoomPort
@@ -28,11 +44,21 @@ namespace WS_ProceduralGeneration
             public MapSpriteDBSO.LayerDir layerDir;
         }
 
+        [Header("Configuration")]
         public GameObject Prefab;
         public Biome biome = Biome.Default;
         public WSDG_Tier.Tier RoomTier;
         public bool ValidVortexHome = true;
+        public RoomConstraints constraints = new()
+        {
+            x = AxisConstraint.Any,
+            y = AxisConstraint.Any,
+            z = AxisConstraint.Any,
+            maxSpawns = -1,
+            minDepth = 0
+        };
 
+        [Header("Data")]
         public Color roomColor = Color.white;
         public FootprintStr[] RoomFootprint = Array.Empty<FootprintStr>();
         public RoomPort[] Ports = Array.Empty<RoomPort>();
@@ -44,6 +70,19 @@ namespace WS_ProceduralGeneration
         {
             for (int i = 0; i < RoomFootprint.Length; i++) if (RoomFootprint[i].Footprint == local) return true;
             return false;
+        }
+
+        public static bool SatisfiesAxisConstraint(AxisConstraint constraint, int cell, int gridSize, int padding = 1)
+        {
+            return constraint switch
+            {
+                AxisConstraint.Any => true,
+                AxisConstraint.Center => cell == gridSize / 2,
+                AxisConstraint.Positive => cell >= gridSize - 1 - padding,
+                AxisConstraint.Negative => cell <= padding,
+                AxisConstraint.Edges => cell <= padding || cell >= gridSize - 1 - padding,
+                _ => true
+            };
         }
 
 #if UNITY_EDITOR
