@@ -2293,6 +2293,7 @@ MonoBehaviour:
   beingRendered: 1
   showFootprint: 0
   showPorts: 0
+  showBounds: 0
   showFootprintCorners: 0
   showFootprintCoords: 0
   showFootprintSprites: 0

@@ -4,6 +4,9 @@ using UnityEngine.Events;
 using static GameManager;
 using WS_ProceduralGeneration;
 using Unity.Collections.LowLevel.Unsafe;
+using NUnit.Framework;
+using System.Collections.Generic;
+using System.Linq;
 
 public class GM_DungeonModule : NetworkBehaviour
 {
@@ -36,7 +39,9 @@ public class GM_DungeonModule : NetworkBehaviour
         base.OnStartServer();
 
         dungeonOpen = false;
-        DungeonGenerator.Instance.OnDungeonGenerated.AddListener(SetHomewardBeaconPosition);
+
+        DungeonGenerator.Instance.OnDungeonGenerated.RemoveListener(OnDungeonGenerated);
+        DungeonGenerator.Instance.OnDungeonGenerated.AddListener(OnDungeonGenerated);
     }
 
     [Server]
@@ -141,6 +146,29 @@ public class GM_DungeonModule : NetworkBehaviour
     void RpcGenerateMap(int mapSize, int theme, int seed)
     {
         mapGenerator.StartGeneration(mapSize, ThemeDatas[theme], seed);
+    }
+
+    private void OnDungeonGenerated()
+    {
+        SetHomewardBeaconPosition();
+
+        var roomIds = DungeonGenerator.Instance.SpawnedRooms.Keys.ToList();
+        int targetR = Mathf.Max(1, (int)(roomIds.Count * Random.Range(0.01f, 0.2f)));
+
+        var selected = new int[targetR];
+        for (int i = 0; i < targetR; i++)
+            selected[i] = roomIds[Random.Range(0, roomIds.Count)];
+
+        DisableRoomsLights(selected);
+    }
+
+    [ClientRpc]
+    private void DisableRoomsLights(int[] indexes)
+    {
+        foreach (int i in indexes)
+        {
+            DungeonGenerator.Instance.SpawnedRooms[i].OverrideLightRenderState(false);
+        }
     }
 
     private void SetHomewardBeaconPosition()

@@ -45,3 +45,27 @@ MonoBehaviour:
     portType: 1
     wallPrefab: {fileID: 952055619204945318, guid: 679b42cded136e345a1c66c97361ea4b, type: 3}
     doorPrefab: {fileID: 0}
+  - direction: 0
+    portType: 3
+    wallPrefab: {fileID: 8890154144869689614, guid: a69c4ca002b6a1e45be04246ff84c482, type: 3}
+    doorPrefab: {fileID: 0}
+  - direction: 1
+    portType: 3
+    wallPrefab: {fileID: 8890154144869689614, guid: c769baa0a11e06f46ad2dcb3732d32de, type: 3}
+    doorPrefab: {fileID: 0}
+  - direction: 2
+    portType: 3
+    wallPrefab: {fileID: 8890154144869689614, guid: d4cd8b0601bb6fe4bad3cccbef59833d, type: 3}
+    doorPrefab: {fileID: 0}
+  - direction: 3
+    portType: 3
+    wallPrefab: {fileID: 8890154144869689614, guid: 73f681ad81d3d2c40acbca4652943661, type: 3}
+    doorPrefab: {fileID: 0}
+  - direction: 4
+    portType: 3
+    wallPrefab: {fileID: 8890154144869689614, guid: 32b2f858fa491e04a89c52c1bfb3490f, type: 3}
+    doorPrefab: {fileID: 0}
+  - direction: 5
+    portType: 3
+    wallPrefab: {fileID: 8890154144869689614, guid: 04760ff8edfc51645ae10168578f8aba, type: 3}
+    doorPrefab: {fileID: 0}

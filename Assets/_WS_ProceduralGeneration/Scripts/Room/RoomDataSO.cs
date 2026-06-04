@@ -1,14 +1,13 @@
 using System;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.Animations;
 
 namespace WS_ProceduralGeneration
 {
     [CreateAssetMenu(menuName = "DungeonGen/RoomData")]
     public class RoomDataSO : ScriptableObject
     {
-        public enum PortType { Doorway, Continuous3x3, Continuous3x3Edge }
+        public enum PortType { Doorway, Continuous3x3, Continuous3x3Edge, Hole }
         public enum AxisConstraint { Any, Center, Positive, Negative, Edges }
 
         [System.Serializable]
@@ -72,7 +71,7 @@ namespace WS_ProceduralGeneration
             return false;
         }
 
-        public static bool SatisfiesAxisConstraint(AxisConstraint constraint, int cell, int gridSize, int padding = 1)
+        public static bool SatisfiesAxisConstraint(AxisConstraint constraint, int cell, int gridSize, int padding = 0)
         {
             return constraint switch
             {

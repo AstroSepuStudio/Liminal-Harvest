@@ -1,4 +1,5 @@
 #if UNITY_EDITOR
+using System.Collections.Generic;
 using Unity.AI.Navigation;
 using UnityEditor;
 using UnityEngine;
@@ -69,6 +70,14 @@ namespace WS_ProceduralGeneration
             EditorGUI.BeginDisabledGroup(roomData.Data == null);
             if (GUILayout.Button("Toggle Port Objects"))
                 TogglePortObjects(roomData);
+            EditorGUI.EndDisabledGroup();
+
+            EditorGUILayout.Space();
+            EditorGUILayout.LabelField("Rotation Tools", EditorStyles.boldLabel);
+
+            EditorGUI.BeginDisabledGroup(roomData.Data == null);
+            if (GUILayout.Button("Rotate 90° Clockwise (Y)"))
+                RotateClockwise90(roomData, _bindingsSO);
             EditorGUI.EndDisabledGroup();
         }
 
@@ -181,6 +190,13 @@ namespace WS_ProceduralGeneration
                     _ => multiplier,
                 };
 
+                multiplier = port.face switch
+                {
+                    Direction.Up => cellSize - 0.5f,
+                    Direction.Down => -0.5f,
+                    _ => multiplier
+                };
+
                 Vector3 spawnPos = cellCenter + dir * multiplier;
 
                 SerializedProperty element = portsProp.GetArrayElementAtIndex(i);
@@ -247,6 +263,103 @@ namespace WS_ProceduralGeneration
 
             EditorUtility.SetDirty(roomData);
         }
+
+        private void RotateClockwise90(RoomData roomData, PortWallBindingsSO bindings)
+        {
+            if (roomData.Data == null) return;
+
+            Undo.SetCurrentGroupName("Rotate Room 90° Clockwise");
+            int undoGroup = Undo.GetCurrentGroup();
+
+            Undo.RecordObject(roomData.Data, "Rotate Footprint");
+
+            var newFootprint = new RoomDataSO.FootprintStr[roomData.Data.RoomFootprint.Length];
+            for (int i = 0; i < roomData.Data.RoomFootprint.Length; i++)
+            {
+                var fp = roomData.Data.RoomFootprint[i];
+                fp.Footprint = RotateCellCW(fp.Footprint);
+                newFootprint[i] = fp;
+            }
+            roomData.Data.RoomFootprint = newFootprint;
+
+            if (roomData.Data.FootprintCorners != null)
+            {
+                var newCorners = new RoomDataSO.FootprintStr[roomData.Data.FootprintCorners.Length];
+                for (int i = 0; i < roomData.Data.FootprintCorners.Length; i++)
+                {
+                    var fp = roomData.Data.FootprintCorners[i];
+                    fp.Footprint = RotateCellCW(fp.Footprint);
+                    newCorners[i] = fp;
+                }
+                roomData.Data.FootprintCorners = newCorners;
+            }
+
+            var newPorts = new RoomDataSO.RoomPort[roomData.Data.Ports.Length];
+            for (int i = 0; i < roomData.Data.Ports.Length; i++)
+            {
+                var port = roomData.Data.Ports[i];
+                port.localCell = RotateCellCW(port.localCell);
+                port.face = RotateDirectionCW(port.face);
+                if (port.deadEndOverride != null)
+                    port.deoCell = RotateCellCW(port.deoCell);
+                newPorts[i] = port;
+            }
+            roomData.Data.Ports = newPorts;
+
+            EditorUtility.SetDirty(roomData.Data);
+
+            Transform pivot = roomData.rotationAnchor != null
+                ? roomData.rotationAnchor
+                : roomData.transform;
+
+            Undo.RecordObject(pivot, "Rotate Model");
+            pivot.Rotate(Vector3.up, 90f);
+
+            SerializedObject so = new(roomData);
+            SerializedProperty portsProp = so.FindProperty("ports");
+            so.Update();
+
+            for (int i = 0; i < portsProp.arraySize; i++)
+            {
+                var element = portsProp.GetArrayElementAtIndex(i);
+
+                var wall = element.FindPropertyRelative("wall").objectReferenceValue as GameObject;
+                if (wall != null)
+                {
+                    Undo.DestroyObjectImmediate(wall);
+                    element.FindPropertyRelative("wall").objectReferenceValue = null;
+                }
+
+                var door = element.FindPropertyRelative("door").objectReferenceValue as GameObject;
+                if (door != null)
+                {
+                    Undo.DestroyObjectImmediate(door);
+                    element.FindPropertyRelative("door").objectReferenceValue = null;
+                }
+            }
+
+            so.ApplyModifiedProperties();
+            EditorUtility.SetDirty(roomData);
+
+            if (bindings != null)
+                PopulatePortWallsDoors(roomData, bindings);
+            else
+                Debug.LogWarning("[RoomData] No PortBindingsSO assigned — skipping port wall repopulation.");
+
+            Undo.CollapseUndoOperations(undoGroup);
+            Debug.Log($"[RoomData] '{roomData.name}' rotated 90° clockwise.");
+        }
+
+        static Vector3Int RotateCellCW(Vector3Int cell) => new(cell.z, cell.y, -cell.x);
+
+        static Direction RotateDirectionCW(Direction d) => d switch
+        {
+            Direction.North => Direction.East,
+            Direction.East => Direction.South,
+            Direction.South => Direction.West,
+            Direction.West => Direction.North,
+            _ => d
+        };
     }
 #endif
 }

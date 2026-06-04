@@ -25,6 +25,7 @@ namespace WS_ProceduralGeneration
         public Renderer[] roomRenderers;
         public LED_Light[] roomLights;
 
+        public Transform rotationAnchor;
         [SerializeField] bool beingRendered = true;
 
         [Header("Gizmo Settings")]
@@ -42,6 +43,7 @@ namespace WS_ProceduralGeneration
         [SerializeField] int currentLayer = 0;
 
         public readonly List<int> closedPorts = new();
+        bool overrideLightState = false;
 
         void Start()
         {
@@ -58,16 +60,25 @@ namespace WS_ProceduralGeneration
 
         public void SetRender(bool shouldRender)
         {
-            if (beingRendered == shouldRender) return;
+            if (beingRendered == shouldRender || overrideLightState) return;
             beingRendered = shouldRender;
             foreach (var r in roomRenderers) r.enabled = shouldRender;
             foreach (var l in roomLights) l.RenderLight(shouldRender);
         }
 
-        public void SetLightRender(bool shouldRender)
+        public void OverrideLightRenderState(bool shouldRender)
         {
-            if (beingRendered == shouldRender) return;
-            foreach (var l in roomLights) l.RenderLight(shouldRender);
+            overrideLightState = shouldRender;
+
+            foreach (var l in roomLights)
+            {
+                if (l == null)
+                {
+                    Debug.Log("[RoomData] Null reference on roomlights", this);
+                    continue;
+                }
+                l.RenderLight(shouldRender);
+            }
         }
 
         public Vector3 GetRandomPositionInRoom(float yOffset = 0f)

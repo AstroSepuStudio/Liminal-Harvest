@@ -1,0 +1,124 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1976320c8433c7b4ba26890fb2382bee, type: 3}
+  m_Name: _Level 0 Backup
+  m_EditorClassIdentifier: 
+  levelName: Level 0
+  startingRoom: {fileID: 11400000, guid: d3dc14e7f8c7d8e4c985085d4830fecb, type: 2}
+  spawnableRooms:
+  - {fileID: 11400000, guid: 7f59f6993f069e34aacaf06318270cb1, type: 2}
+  - {fileID: 11400000, guid: 74a8d1cf0b6ce7a4d856fa8094da36ce, type: 2}
+  - {fileID: 11400000, guid: 17d08f2cd2d73c344a8924f0e65c46f9, type: 2}
+  - {fileID: 11400000, guid: d1dc947ea053de54ca1648fb0d564d9d, type: 2}
+  - {fileID: 11400000, guid: 0e3f80bee5d903a4f8b314296ea25dbf, type: 2}
+  - {fileID: 11400000, guid: 971a5b27fbc2e5346a3d65e3ab6e71a6, type: 2}
+  - {fileID: 11400000, guid: 757ebc56406bd074db367e05b2787e96, type: 2}
+  - {fileID: 11400000, guid: 689b8198fbc096d4486be57043364308, type: 2}
+  - {fileID: 11400000, guid: b9cf2cf32ed402044ad5519bb675c21d, type: 2}
+  - {fileID: 11400000, guid: 63cbe0fa41f43624f8e73c199c93ea8e, type: 2}
+  - {fileID: 11400000, guid: 1486d5f5ec29dab46a56f4308eca3102, type: 2}
+  - {fileID: 11400000, guid: bc1c49022445f3946a2c9bad29e97fd8, type: 2}
+  - {fileID: 11400000, guid: 26a7471d80765c340891e29d981fc723, type: 2}
+  - {fileID: 11400000, guid: ed0024c4177553c4e8dbded39570c394, type: 2}
+  - {fileID: 11400000, guid: e48e4f28db9c8454a857089b1df4ef66, type: 2}
+  - {fileID: 11400000, guid: 3684bb5a33af98649a673730da3668c8, type: 2}
+  - {fileID: 11400000, guid: 93706b41937c0d7419152d5a714f6418, type: 2}
+  - {fileID: 11400000, guid: cea8b4f4b6af8cc44a47b56b75e07737, type: 2}
+  - {fileID: 11400000, guid: ac3170f1e202d3e4bbadb65af23d1846, type: 2}
+  - {fileID: 11400000, guid: f5957ed9759bb974f843ec526e786df4, type: 2}
+  - {fileID: 11400000, guid: fe73784eb4120b94595c0379fe7772cd, type: 2}
+  - {fileID: 11400000, guid: cc8bb3da76d675e41810e1b49db2b3f0, type: 2}
+  - {fileID: 11400000, guid: f874495820cf9d94ab14a81a5e09bc28, type: 2}
+  - {fileID: 11400000, guid: 051e6465e2c528f4ab64a2c50d98e096, type: 2}
+  - {fileID: 11400000, guid: 08499f1cab3eaeb46865155f5406d77d, type: 2}
+  - {fileID: 11400000, guid: 89815514ee3fd8a4cbe65b8a7d327b0a, type: 2}
+  - {fileID: 11400000, guid: da19610f5a325994480c008648ec7bd3, type: 2}
+  - {fileID: 11400000, guid: d6e429bede536814ca43b46743cbafbf, type: 2}
+  - {fileID: 11400000, guid: bf7a1f4be44e2124eaa48130a3f06ca1, type: 2}
+  - {fileID: 11400000, guid: 841463052e28e024e9d9f00da58d18f8, type: 2}
+  - {fileID: 11400000, guid: be1f118a2d1681946ba6d2e2baa121b3, type: 2}
+  - {fileID: 11400000, guid: c26c2f8c9e073434bba69aaac4e6cb01, type: 2}
+  - {fileID: 11400000, guid: 94f3039cd41f46a4f8c9cf3fd826d473, type: 2}
+  - {fileID: 11400000, guid: 7a0cb0ce971a8e24eaf1c91ab9da0f07, type: 2}
+  - {fileID: 11400000, guid: b49e30fbb5f9cb745b662de9b31ac9d4, type: 2}
+  - {fileID: 11400000, guid: 21421b535844a01479c45506a9d63be6, type: 2}
+  - {fileID: 11400000, guid: 408f1e63a7021c1449e866cf55f5b5e1, type: 2}
+  - {fileID: 11400000, guid: 7e42f3efb49463b4bb7a71835c7ed0d5, type: 2}
+  - {fileID: 11400000, guid: 3121ef64459027b4f859a1186ec6c830, type: 2}
+  - {fileID: 11400000, guid: 90ea55d32cf56114d86026758025b491, type: 2}
+  - {fileID: 11400000, guid: f1de1758d57b0c047b4392570f83dddb, type: 2}
+  - {fileID: 11400000, guid: a930a9255d3dec743a7f39fbf44b7f8e, type: 2}
+  - {fileID: 11400000, guid: dff69ab9d792dde4a8d35ccd3aeefebf, type: 2}
+  - {fileID: 11400000, guid: 1c91da54f194c0140a60d05d084b4e5b, type: 2}
+  - {fileID: 11400000, guid: 213741dfbae24a741bc31448c51fd4dd, type: 2}
+  - {fileID: 11400000, guid: 84d86eaab8cc34147b74786e914dbeb4, type: 2}
+  - {fileID: 11400000, guid: 4d6a56ad137fbe843973578efe060f83, type: 2}
+  - {fileID: 11400000, guid: 276f9cf927ffa354f89f1b97f26ac135, type: 2}
+  deadEndRooms: []
+  gridGrowth:
+    x: 3
+    y: 4
+    z: 2
+  startRoomAlignment:
+    x: 0
+    y: 0
+    z: 0
+  floorMaterial: {fileID: 2100000, guid: aa57f306f6da7bd4e9892c9401ee6d60, type: 2}
+  ceilingMaterial: {fileID: 2100000, guid: 6a12ac9bdcb199a4a82fb4888f484d32, type: 2}
+  wallMaterial: {fileID: 2100000, guid: aea1bd7129cd4044bb8fd7c385a4e739, type: 2}
+  spawnableItems:
+  - {fileID: 11400000, guid: d6015b7736f8f8c49b4af775dd7ff787, type: 2}
+  - {fileID: 11400000, guid: e876387970135904991dc64764e7c5e6, type: 2}
+  - {fileID: 11400000, guid: d6e97891ed5dd834e9e2e6354ba8050f, type: 2}
+  - {fileID: 11400000, guid: fa0ac3fbbce4a7d47b1441de5152c8b5, type: 2}
+  - {fileID: 11400000, guid: 9e1f470697f150e49a583de621d610bd, type: 2}
+  - {fileID: 11400000, guid: 8161e72aeb2d2c44c9238e6f2e7c1d8c, type: 2}
+  spawnableFurniture:
+  - {fileID: 11400000, guid: 5ec73b96afe77a740b868e17e16ac691, type: 2}
+  - {fileID: 11400000, guid: 705c82ef6b0010a4698ae119b907454e, type: 2}
+  - {fileID: 11400000, guid: 25b8faf286fc1d94185c254f2340b855, type: 2}
+  - {fileID: 11400000, guid: aeb880657986d454fa01ac9e153bcf20, type: 2}
+  - {fileID: 11400000, guid: 9a0bf54833b150548a2459884958e88e, type: 2}
+  - {fileID: 11400000, guid: 6160654aa09949b4e8a5902e005fa43c, type: 2}
+  - {fileID: 11400000, guid: 652c056b60719c542b6a73324d9e42e2, type: 2}
+  EntitySpawns:
+  - EntityData: {fileID: 11400000, guid: 8ad3570e8d2d27744a9652a1778ff732, type: 2}
+    SpawnWeight: 60
+  - EntityData: {fileID: 11400000, guid: 5683510d4395c1e439e2f0e16988e173, type: 2}
+    SpawnWeight: 35
+  - EntityData: {fileID: 11400000, guid: af6902f5921797d4e850d51a561cb65b, type: 2}
+    SpawnWeight: 5
+  spawnableDecoration:
+  - {fileID: 11400000, guid: c0cbf184c5cf00643b6d84bbd2d16f0b, type: 2}
+  - {fileID: 11400000, guid: 08f5e7c7c642d8f4d84ee1ba8fc00bbf, type: 2}
+  - {fileID: 11400000, guid: 5627189a53de3b34eaa4204b3a818085, type: 2}
+  AmbienceClr: {r: 0.6313726, g: 0.5647059, b: 0, a: 1}
+  AmbienceIntensity: 0
+  loopingMusic: {fileID: 11400000, guid: 21e4fcf983c0ff04ea75d61c8c3ef203, type: 2}
+  eerySFX:
+  - {fileID: 11400000, guid: 45225f6f3f9748c43995323ca274d2ec, type: 2}
+  - {fileID: 11400000, guid: 188379ca5c90a2c45b8b87432d94c15d, type: 2}
+  - {fileID: 11400000, guid: 280036234df691148943e46198084a6a, type: 2}
+  - {fileID: 11400000, guid: aad1bb611cd17014d911a648d02faa15, type: 2}
+  - {fileID: 11400000, guid: 9eb2b1924455f164b9f4294220744bff, type: 2}
+  - {fileID: 11400000, guid: c028b56be718825488f29ac5322975da, type: 2}
+  - {fileID: 11400000, guid: e076ee32c9ad48242a3bba03cb3ae2b9, type: 2}
+  - {fileID: 11400000, guid: 4c44328051f7ac9419ea806d1e2bcb5a, type: 2}
+  - {fileID: 11400000, guid: 6f30c720b1dbe9a498897f681636fdd6, type: 2}
+  - {fileID: 11400000, guid: 98e8f59c30eddae47901f9c31c262b8e, type: 2}
+  - {fileID: 11400000, guid: 4140bcc02190d5f45a4a9ca76adf96fb, type: 2}
+  - {fileID: 11400000, guid: 0a404c831a6c5f247b9797ba0b22f130, type: 2}
+  - {fileID: 11400000, guid: 7ab73471af1f7e848b128117bed16847, type: 2}
+  - {fileID: 11400000, guid: 3866b7905d2a6ab42aaf6d89a3936bd7, type: 2}
+  reverbPreset: 12
+  MinItems: 3
+  MaxItems: 12
