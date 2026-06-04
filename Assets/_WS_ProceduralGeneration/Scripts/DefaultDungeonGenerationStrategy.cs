@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
 namespace WS_ProceduralGeneration
@@ -17,6 +18,38 @@ namespace WS_ProceduralGeneration
             public RoomDataSO.PortType type;
         }
 
+        Dictionary<Biome, RoomDataSO[]> BuildBiomeRoomMap(RoomDataSO[] rooms)
+        {
+            var map = new Dictionary<Biome, List<RoomDataSO>>();
+            foreach (var r in rooms)
+            {
+                if (r == null) continue;
+                if (!map.TryGetValue(r.BiomeData, out var list))
+                    map[r.BiomeData] = list = new();
+                list.Add(r);
+            }
+            return map.ToDictionary(kvp => kvp.Key, kvp => kvp.Value.ToArray());
+        }
+
+        RoomDataSO[] GetWeightedCandidates(DungeonGenerationContext ctx, RoomDataSO[] candidates)
+        {
+            var rolledTier = RollTier(ctx, WSDG_Tier.BaseTierWeights);
+            var weighted = new List<RoomDataSO>();
+
+            foreach (var c in candidates)
+            {
+                if (c == null || c.RoomTier != rolledTier) continue;
+                weighted.Add(c);
+            }
+
+            if (weighted.Count == 0)
+                foreach (var c in candidates)
+                    if (c != null) weighted.Add(c);
+
+            Shuffle(ctx.RNG, weighted);
+            return weighted.ToArray();
+        }
+
         public Vector3Int Generate(
             DungeonGenerationContext ctx,
             List<DungeonGenerator.PlacedRoom> placed,
@@ -24,9 +57,15 @@ namespace WS_ProceduralGeneration
         {
             _spawnCounts.Clear();
 
-            if (ctx.Theme?.startingRoom == null)
+            if (ctx.Theme == null)
             {
-                Debug.LogError("[DunGen] Theme or startingRoom is missing.");
+                Debug.LogError("[DunGen] Theme is missing.");
+                return Vector3Int.zero;
+            }
+
+            if (ctx.Theme.startingRoom == null)
+            {
+                Debug.LogError("[DunGen] StartingRoom is missing.");
                 return Vector3Int.zero;
             }
 
@@ -39,6 +78,9 @@ namespace WS_ProceduralGeneration
                 ThemeDataSO.EvaluateOrigin(alignment.z, ctx.GridSize.z));
 
             var center = ClampAnchorToGrid(ctx.Theme.startingRoom, raw, ctx.GridSize);
+
+            FillBiomeGrid(ctx, center);
+            var biomeRoomMap = BuildBiomeRoomMap(ctx.Theme.spawnableRooms);
 
             var start = Place(ctx.Theme.startingRoom, center, 0, ctx, placed, grid, ref nextRoomId);
             if (start == null)
@@ -61,16 +103,21 @@ namespace WS_ProceduralGeneration
                 if (open.depth >= maxDepth) continue;
 
                 var neighborRoom = placed.Find(r => r.id == open.roomId);
-                var candidates = GetWeightedCandidates(ctx, ctx.Theme.spawnableRooms, neighborRoom.biome);
+                var biome = ctx.BiomeGrid[open.worldCell.x, open.worldCell.y, open.worldCell.z];
 
+                if (!biomeRoomMap.TryGetValue(biome, out var pool) || pool.Length == 0)
+                {
+                    if (!biomeRoomMap.TryGetValue(Biome.Default, out pool) || pool.Length == 0)
+                        continue;
+                }
+
+                var candidates = GetWeightedCandidates(ctx, pool);
                 bool placedAny = false;
-                int biomeSearchTries = candidates.Length / 10;
 
                 for (int c = 0; c < candidates.Length; c++)
                 {
                     var cand = candidates[c];
                     if (cand == null) continue;
-                    if (cand.biome != neighborRoom.biome && biomeSearchTries > 0) { biomeSearchTries--; continue; }
 
                     for (int p = 0; p < cand.Ports.Length; p++)
                     {
@@ -105,6 +152,111 @@ namespace WS_ProceduralGeneration
             return center;
         }
 
+        public void FillBiomeGrid(DungeonGenerationContext ctx, Vector3Int startCell)
+        {
+            var grid = new Biome[ctx.GridSize.x, ctx.GridSize.y, ctx.GridSize.z];
+
+            for (int x = 0; x < ctx.GridSize.x; x++)
+                for (int y = 0; y < ctx.GridSize.y; y++)
+                    for (int z = 0; z < ctx.GridSize.z; z++)
+                        grid[x, y, z] = Biome.None;
+
+            ctx.BiomeGrid = grid;
+
+            BiomeDataSO startBiome = ctx.Theme.GetStartingBiome();
+            if (startBiome != null)
+            {
+                int r = ctx.RNG.Next(startBiome.minRadius, startBiome.maxRadius + 1);
+                PlaceBiomeBubble(ctx, startCell, startBiome.biome, r);
+            }
+            else
+                Debug.LogWarning("Starting biome data is not set on spawnable biomes on the theme");
+            
+            int volume = ctx.GridSize.x * ctx.GridSize.y * ctx.GridSize.z;
+            int bubbleCount = Mathf.Max(1, volume / 20);
+
+            var biomes = ctx.Theme.spawnableBiomes;
+            if (biomes == null || biomes.Length == 0) return;
+
+            float totalWeight = 0f;
+            foreach (var b in biomes) totalWeight += b.spawnWeight;
+
+            for (int i = 0; i < bubbleCount; i++)
+            {
+                var biomeData = RollWeightedBiome(ctx.RNG, biomes, totalWeight);
+                if (biomeData == null) continue;
+
+                var pos = new Vector3Int(
+                    ctx.RNG.Next(ctx.GridSize.x),
+                    ctx.RNG.Next(ctx.GridSize.y),
+                    ctx.RNG.Next(ctx.GridSize.z));
+
+                int radius = ctx.RNG.Next(biomeData.minRadius, biomeData.maxRadius + 1);
+                PlaceBiomeBubble(ctx, pos, biomeData.biome, radius);
+            }
+
+            FloodFillRemainingCells(ctx);
+        }
+
+        void FloodFillRemainingCells(DungeonGenerationContext ctx)
+        {
+            var queue = new Queue<Vector3Int>();
+
+            for (int x = 0; x < ctx.GridSize.x; x++)
+                for (int y = 0; y < ctx.GridSize.y; y++)
+                    for (int z = 0; z < ctx.GridSize.z; z++)
+                        if (ctx.BiomeGrid[x, y, z] != Biome.None)
+                            queue.Enqueue(new Vector3Int(x, y, z));
+
+            int[] dx = { 1, -1, 0, 0, 0, 0 };
+            int[] dy = { 0, 0, 1, -1, 0, 0 };
+            int[] dz = { 0, 0, 0, 0, 1, -1 };
+
+            while (queue.Count > 0)
+            {
+                var cell = queue.Dequeue();
+                var biome = ctx.BiomeGrid[cell.x, cell.y, cell.z];
+
+                for (int i = 0; i < 6; i++)
+                {
+                    var nb = new Vector3Int(cell.x + dx[i], cell.y + dy[i], cell.z + dz[i]);
+                    if (!ctx.InBounds(nb)) continue;
+                    if (ctx.BiomeGrid[nb.x, nb.y, nb.z] != Biome.None) continue;
+                    ctx.BiomeGrid[nb.x, nb.y, nb.z] = biome;
+                    queue.Enqueue(nb);
+                }
+            }
+        }
+
+        void PlaceBiomeBubble(DungeonGenerationContext ctx, Vector3Int center, Biome biome, int radius)
+        {
+            for (int x = -radius; x <= radius; x++)
+                for (int y = -radius; y <= radius; y++)
+                    for (int z = -radius; z <= radius; z++)
+                    {
+                        float dist = Mathf.Sqrt(x * x + (y * y * 4f) + z * z);
+                        if (dist > radius) continue;
+
+                        var cell = center + new Vector3Int(x, y, z);
+                        if (!ctx.InBounds(cell)) continue;
+
+                        if (ctx.BiomeGrid[cell.x, cell.y, cell.z] != Biome.None) continue;
+
+                        ctx.BiomeGrid[cell.x, cell.y, cell.z] = biome;
+                    }
+        }
+
+        static BiomeDataSO RollWeightedBiome(System.Random rng, BiomeDataSO[] biomes, float totalWeight)
+        {
+            float roll = (float)(rng.NextDouble() * totalWeight);
+            foreach (var b in biomes)
+            {
+                roll -= b.spawnWeight;
+                if (roll <= 0f) return b;
+            }
+            return biomes[^1];
+        }
+
         private DungeonGenerator.PlacedRoom Place(
             RoomDataSO data, Vector3Int anchor, int depth,
             DungeonGenerationContext ctx,
@@ -120,8 +272,11 @@ namespace WS_ProceduralGeneration
                 data = data,
                 anchor = anchor,
                 depth = depth,
-                biome = data.biome
+                biome = ctx.BiomeGrid != null
+                    ? ctx.BiomeGrid[anchor.x, anchor.y, anchor.z]
+                    : data.BiomeData
             };
+
 
             placed.Add(pr);
             if (data.constraints.maxSpawns >= 0)
@@ -179,30 +334,6 @@ namespace WS_ProceduralGeneration
                 Mathf.Clamp(anchor.x, -fpMin.x, gridSize.x - 1 - fpMax.x),
                 Mathf.Clamp(anchor.y, -fpMin.y, gridSize.y - 1 - fpMax.y),
                 Mathf.Clamp(anchor.z, -fpMin.z, gridSize.z - 1 - fpMax.z));
-        }
-
-        RoomDataSO[] GetWeightedCandidates(DungeonGenerationContext ctx, RoomDataSO[] candidates, Biome neighborBiome)
-        {
-            var rolledTier = RollTier(ctx, WSDG_Tier.BaseTierWeights);
-            var weighted = new List<RoomDataSO>();
-
-            foreach (var c in candidates)
-            {
-                if (c == null || c.RoomTier != rolledTier) continue;
-                weighted.Add(c);
-                if (c.biome == neighborBiome) { weighted.Add(c); weighted.Add(c); }
-            }
-
-            if (weighted.Count == 0)
-                foreach (var c in candidates)
-                {
-                    if (c == null) continue;
-                    weighted.Add(c);
-                    if (c.biome == neighborBiome) { weighted.Add(c); weighted.Add(c); }
-                }
-
-            Shuffle(ctx.RNG, weighted);
-            return weighted.ToArray();
         }
 
         bool SatisfiesConstraints(RoomDataSO room, Vector3Int anchor, int depth, Vector3Int gridSize)

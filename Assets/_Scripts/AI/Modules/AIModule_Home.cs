@@ -63,7 +63,7 @@ public class AIModule_Home : AIModule
         {
             RoomData rd = kvp.Value;
             if (rd == null) continue;
-            if (rd.Data.biome == Biome.Hallway || !rd.Data.ValidVortexHome) continue;
+            if (rd.Data.BiomeData == Biome.Hallway || !rd.Data.ValidVortexHome) continue;
 
             float dist = Vector3.Distance(startPos, rd.transform.position);
             if (dist >= minBand && dist <= maxBand)

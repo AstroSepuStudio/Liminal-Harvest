@@ -83380,6 +83380,7 @@ MonoBehaviour:
   surface: {fileID: 1683667320}
   reverbZone: {fileID: 1911637261}
   simMapSize: 5
+  showBiomeGrid: 1
   OnDungeonSetUp:
     m_PersistentCalls:
       m_Calls: []

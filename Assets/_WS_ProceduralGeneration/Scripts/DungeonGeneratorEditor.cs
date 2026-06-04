@@ -160,14 +160,14 @@ namespace WS_ProceduralGeneration
                     if (c == null) continue;
                     if (c.RoomTier != tier) continue;
                     weighted.Add(c);
-                    if (c.biome == neighborBiome) { weighted.Add(c); weighted.Add(c); }
+                    if (c.BiomeData == neighborBiome) { weighted.Add(c); weighted.Add(c); }
                 }
                 if (weighted.Count == 0)
                     foreach (var c in candidates)
                     {
                         if (c == null) continue;
                         weighted.Add(c);
-                        if (c.biome == neighborBiome) { weighted.Add(c); weighted.Add(c); }
+                        if (c.BiomeData == neighborBiome) { weighted.Add(c); weighted.Add(c); }
                     }
                 Shuffle(weighted);
                 return weighted.ToArray();
@@ -198,7 +198,7 @@ namespace WS_ProceduralGeneration
             {
                 if (!FootprintFits(data, anchor)) return false;
                 int id = placedRooms.Count + 1;
-                placedRooms.Add((data, anchor, depth, data.biome));
+                placedRooms.Add((data, anchor, depth, data.BiomeData));
                 foreach (var fp in data.RoomFootprint)
                 {
                     var w = anchor + fp.Footprint;
@@ -244,7 +244,7 @@ namespace WS_ProceduralGeneration
                 foreach (var cand in candidates)
                 {
                     if (cand == null) continue;
-                    if (cand.biome != neighborBiome && biomeSearchTries > 0) { biomeSearchTries--; continue; }
+                    if (cand.BiomeData != neighborBiome && biomeSearchTries > 0) { biomeSearchTries--; continue; }
 
                     foreach (var port in cand.Ports)
                     {

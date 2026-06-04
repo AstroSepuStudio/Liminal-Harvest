@@ -6,8 +6,6 @@ namespace WS_ProceduralGeneration
 
     public enum SequenceDirection { Forward, Backwards }
 
-    public enum Biome { Default, Pillar, Dark, Hallway, Holes }
-
     public static class DirectionUtils
     {
         public static Vector3Int DirectionVector(Direction d) => d switch

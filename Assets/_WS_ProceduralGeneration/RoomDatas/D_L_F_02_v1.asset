@@ -13,9 +13,15 @@ MonoBehaviour:
   m_Name: D_L_F_02_v1
   m_EditorClassIdentifier: 
   Prefab: {fileID: 6859338258297046723, guid: 215bc3c29a5dcfd40b141371ce67f409, type: 3}
-  biome: 0
+  BiomeData: 1
   RoomTier: 0
   ValidVortexHome: 0
+  constraints:
+    x: 0
+    y: 0
+    z: 0
+    maxSpawns: -1
+    minDepth: 0
   roomColor: {r: 1, g: 1, b: 1, a: 1}
   RoomFootprint:
   - Footprint: {x: 0, y: 0, z: 0}

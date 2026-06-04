@@ -10,6 +10,8 @@ namespace WS_ProceduralGeneration
         public DungeonSettingsSO Settings;
         public ThemeDataSO Theme;
 
+        public Biome[,,] BiomeGrid;
+
         public bool InBounds(Vector3Int p) =>
             p.x >= 0 && p.y >= 0 && p.z >= 0 &&
             p.x < GridSize.x && p.y < GridSize.y && p.z < GridSize.z;

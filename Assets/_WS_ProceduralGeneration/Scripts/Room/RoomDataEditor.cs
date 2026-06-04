@@ -177,7 +177,7 @@ namespace WS_ProceduralGeneration
 
                 Vector3 dir = (Vector3)DirectionUtils.DirectionVector(port.face);
 
-                float multiplier = roomData.Data.biome switch
+                float multiplier = roomData.Data.BiomeData switch
                 {
                     //Biome.Pillar => halfCell,
                     Biome.Hallway => halfCell,

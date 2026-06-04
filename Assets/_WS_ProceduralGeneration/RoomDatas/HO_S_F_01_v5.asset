@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: HO_S_F_01_v5
   m_EditorClassIdentifier: 
   Prefab: {fileID: 6859338258297046723, guid: 331ef8fd8590acf4d95c23cee00cdd5c, type: 3}
-  biome: 4
+  BiomeData: 5
   RoomTier: 0
   ValidVortexHome: 1
   constraints:

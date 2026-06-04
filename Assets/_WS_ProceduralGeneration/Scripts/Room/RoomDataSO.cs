@@ -45,7 +45,7 @@ namespace WS_ProceduralGeneration
 
         [Header("Configuration")]
         public GameObject Prefab;
-        public Biome biome = Biome.Default;
+        public Biome BiomeData;
         public WSDG_Tier.Tier RoomTier;
         public bool ValidVortexHome = true;
         public RoomConstraints constraints = new()

@@ -91,6 +91,11 @@ MonoBehaviour:
     x: 0
     y: 0
     z: 0
+  spawnableBiomes:
+  - {fileID: 11400000, guid: 489cc5274406e194d88ef74ccde144a0, type: 2}
+  - {fileID: 11400000, guid: d107ea31a8959954895c18fee7c4cccb, type: 2}
+  - {fileID: 11400000, guid: 6a0cf94fef4d1bc44aabdf0da396655a, type: 2}
+  - {fileID: 11400000, guid: 85f93ecc9b6092c43a718896984e7399, type: 2}
   floorMaterial: {fileID: 2100000, guid: aa57f306f6da7bd4e9892c9401ee6d60, type: 2}
   ceilingMaterial: {fileID: 2100000, guid: 6a12ac9bdcb199a4a82fb4888f484d32, type: 2}
   wallMaterial: {fileID: 2100000, guid: aea1bd7129cd4044bb8fd7c385a4e739, type: 2}

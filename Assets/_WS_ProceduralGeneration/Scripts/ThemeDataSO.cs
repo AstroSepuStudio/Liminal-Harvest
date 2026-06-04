@@ -3,6 +3,8 @@ using UnityEngine;
 
 namespace WS_ProceduralGeneration
 {
+    public enum Biome { None, Default, Pillar, Dark, Hallway, Holes }
+
     [CreateAssetMenu(menuName = "DungeonGen/ThemeData")]
     public class ThemeDataSO : ScriptableObject
     {
@@ -52,6 +54,8 @@ namespace WS_ProceduralGeneration
             y = AxisAlignment.Center,
             z = AxisAlignment.Center,
         };
+
+        public BiomeDataSO[] spawnableBiomes;
 
         [Header("Visuals")]
         public Material floorMaterial;
@@ -208,6 +212,17 @@ namespace WS_ProceduralGeneration
                 WSDG_Tier.Tier.Legendary => multiplier * multiplier * multiplier,
                 _ => 1f,
             };
+        }
+
+        public BiomeDataSO GetStartingBiome()
+        {
+            foreach (var b in spawnableBiomes)
+            {
+                if (b.biome == startingRoom.BiomeData)
+                    return b;
+            }
+
+            return null;
         }
 
         static EntitySpawn RollWeighted(List<EntitySpawn> pool, System.Random rng)

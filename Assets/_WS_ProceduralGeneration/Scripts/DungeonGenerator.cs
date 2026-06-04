@@ -24,10 +24,13 @@ namespace WS_ProceduralGeneration
 
         [Header("Debug")]
         [SerializeField, Min(1)] int simMapSize = 10;
+        [SerializeField] bool showBiomeGrid = false;
 
         public System.Random RNG { get; private set; }
 
         Cell[,,] grid;
+        Biome[,,] _biomeGrid;
+
         int currentMapSize = -1;
         float maxDistance = 0;
         bool _generated = false;
@@ -147,6 +150,7 @@ namespace WS_ProceduralGeneration
 
             var startAnchor = _strategy.Generate(ctx, placed, grid);
             StartRoomPos = startAnchor * CellSize;
+            _biomeGrid = ctx.BiomeGrid;
         }
 
         #region Helpers
@@ -386,6 +390,8 @@ namespace WS_ProceduralGeneration
             RoomAdjacency.Clear();
 
             grid = null;
+            _biomeGrid = null;
+
             _generated = false;
             maxDistance = 0;
             RNG = null;
@@ -408,6 +414,15 @@ namespace WS_ProceduralGeneration
             float gridDistance = Vector3.Distance(initialRoomPos, targetPos) / 5f;
             return settings.difficultyCurve.Evaluate(gridDistance);
         }
+
+        static Dictionary<Biome, Color> BuildBiomeColorMap() => new()
+        {
+            { Biome.Default,  Color.gray },
+            { Biome.Dark,     new Color(0.24f, 0.20f, 0.54f) },
+            { Biome.Hallway,  new Color(0.11f, 0.62f, 0.46f) },
+            { Biome.Holes,    new Color(0.85f, 0.35f, 0.19f) },
+            { Biome.Pillar,   new Color(0.83f, 0.33f, 0.49f) },
+        };
 
         void OnDrawGizmosSelected()
         {
@@ -441,8 +456,28 @@ namespace WS_ProceduralGeneration
                     fp.Footprint.x * cs + cs * 0.5f,
                     fp.Footprint.y * cs + cs * 0.5f,
                     fp.Footprint.z * cs + cs * 0.5f);
-
                 Gizmos.DrawWireCube(cellWorld, Vector3.one * cs);
+            }
+
+            if (showBiomeGrid && _biomeGrid != null)
+            {
+                var biomeColors = BuildBiomeColorMap();
+
+                for (int x = 0; x < effectiveGridSize.x; x++)
+                    for (int y = 0; y < effectiveGridSize.y; y++)
+                        for (int z = 0; z < effectiveGridSize.z; z++)
+                        {
+                            var biome = _biomeGrid[x, y, z];
+                            if (!biomeColors.TryGetValue(biome, out var col)) continue;
+
+                            col.a = 0.18f;
+                            Gizmos.color = col;
+                            Vector3 center = transform.position + new Vector3(
+                                x * cs + cs * 0.5f,
+                                y * cs + cs * 0.5f,
+                                z * cs + cs * 0.5f);
+                            Gizmos.DrawCube(center, 0.92f * cs * Vector3.one);
+                        }
             }
         }
     }
